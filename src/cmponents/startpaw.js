@@ -5,45 +5,76 @@ class startPWA extends React.Component {
     constructor(props) {
         super(props)
 
+        this.onClickRefresh = this.onClickRefresh.bind(this)
+
         this.state = {
             hideMessage: 0,
             leadingScreen: 0,
             loader: 0,
             loadingMessage: '',
-            reloadMessage: 0
+            reloadMessage: 0,
+            longitude: '',
+            latitude: '',
+            accuracy: ''
         }
     }
 
     componentDidMount() {
 
-        if (window.matchMedia('(display-mode: standalone)').matches) {
+        axios.get(`https://freegeoip.app/json/`)
+            .then(response => {
+                const { ip, country_code } = response.data
+                const userAgent = navigator.userAgent
 
-            axios.get(`https://freegeoip.app/json/`)
-                .then(response => {
-                    const { ip, country_code } = response.data
-                    const userAgent = navigator.userAgent
-                    this.onClickRefresh = this.onClickRefresh.bind(this)
+                this.setState({
+                    leadingScreen: 1,
+                    loadingMessage: 'creating session'
+                })
 
-                    const details = {
-                        ip,
-                        country_code,
-                        userAgent
-                    };
-
+                var options = {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                };
+                const success = (pos) => {
+                    var crd = pos.coords;
 
                     this.setState({
-                        leadingScreen: 1,
-                        loadingMessage: 'creating session'
+                        longitude: crd.longitude,
+                        latitude: crd.latitude,
+                        accuracy: crd.accuracy
+                    })
+
+                }
+
+                const error = (err) => {
+                    // console.log(`ERROR(${err.code}): ${err.message}`);
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(success, error, options);
+
+                setTimeout(() => {
+
+                    this.setState({
+                        hideMessage: 1,
+                        loader: 1
                     })
 
                     setTimeout(() => {
 
-                        this.setState({
-                            hideMessage: 1,
-                            loader: 1
-                        })
+                        if (this.state.longitude &&
+                            this.state.latitude &&
+                            this.state.accuracy) {
 
-                        setTimeout(() => {
+                            const details = {
+                                ip,
+                                country_code,
+                                userAgent,
+                                longitude: this.state.longitude,
+                                latitude: this.state.latitude,
+                                accuracy: this.state.accuracy
+                            };
 
                             axios.post('https://dubatravels.herokuapp.com/user/agent/', details)
                                 .then((response) => {
@@ -65,20 +96,23 @@ class startPWA extends React.Component {
                                     })
                                     // window.location = "/offline.html"
                                 })
+                        } else {
+                            this.setState({
+                                loader: 0,
+                                loadingMessage: 'Please enable location access.',
+                                reloadMessage: 1
+                            })
+                        }
+                    }, 3000);
 
-                        }, 3000);
+                }, 1000);
 
-                    }, 1000);
+            })
+            .catch(err => {
+                window.location = "/offline.html"
+                console.log(err)
+            })
 
-                })
-                .catch(err => {
-                    window.location = "/offline.html"
-                    console.log(err)
-                })
-
-        } else {
-            window.location = "/"
-        }
 
     }
 

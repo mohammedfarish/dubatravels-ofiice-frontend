@@ -47,21 +47,18 @@
 /* @media  */
 
 /* ========================= */
-.headless {
-  overflow-x: hidden;
-  font-family: "Mulish", sans-serif;
-}
 
 .homepage-logo {
   pointer-events: none;
 }
 
 .homepage {
+  font-family: "Mulish", sans-serif;
   padding-left: 4%;
   padding-right: 4%;
   display: flex;
   /* background: green; */
-  height: 90vh;
+  height: 100vh;
   align-items: center;
   flex-direction: column;
   text-align: center;

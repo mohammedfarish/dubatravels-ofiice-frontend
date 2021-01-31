@@ -4,12 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-document.addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-});
-document.addEventListener('copy', (e) => {
-  e.preventDefault();
-});
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class iOS extends React.Component {
+class Install extends React.Component {
 
     constructor(props) {
         super(props)
@@ -15,7 +15,7 @@ class iOS extends React.Component {
     render() {
         return (
             <div>
-                <div className="install-page">
+                <div className="install-page" id="ios">
                     <div className="intsall-header-container">
                         <h1 className="homepage-header"> How to install the Duba Remote Office Portal on iOS?</h1>
                     </div>
@@ -47,4 +47,4 @@ class iOS extends React.Component {
     }
 }
 
-export default iOS;
+export default Install;
