@@ -26,7 +26,7 @@ class Export extends React.Component {
 
     componentDidMount() {
 
-        axios.get('http://localhost:5000/user/')
+        axios.get('https://dubatravels.herokuapp.com/user/')
             .then(response => {
                 if (response.data.length > 0) {
                     this.setState({
@@ -75,7 +75,7 @@ class Export extends React.Component {
 
         console.log(exercise);
 
-        axios.post('http://localhost:5000/exercise/add', exercise)
+        axios.post('https://dubatravels.herokuapp.com/exercise/add', exercise)
             .then(res => console.log(res.data))
 
         window.location = '/';

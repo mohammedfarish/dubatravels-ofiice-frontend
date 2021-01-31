@@ -45,7 +45,7 @@ class startPWA extends React.Component {
 
                         setTimeout(() => {
 
-                            axios.post('http://192.168.1.18:5000/user/agent/', details)
+                            axios.post('https://dubatravels.herokuapp.com/user/agent/', details)
                                 .then((response) => {
                                     if (response.data) {
 

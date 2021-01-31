@@ -161,7 +161,7 @@ class Register extends React.Component {
 
         // console.log(user);
 
-        axios.post('http://192.168.1.18:5000/user/register', user)
+        axios.post('https://dubatravels.herokuapp.com/user/register', user)
             .then(res => {
                 console.log(res)
                 if (res.data === "Success!") {

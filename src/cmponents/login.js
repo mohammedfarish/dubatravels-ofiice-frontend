@@ -110,7 +110,7 @@ class Login extends React.Component {
 
         // console.log(user);
 
-        axios.post('http://192.168.1.18:5000/user/login', user)
+        axios.post('https://dubatravels.herokuapp.com/user/login', user)
             .then(res => {
 
                 if (res.data) {
