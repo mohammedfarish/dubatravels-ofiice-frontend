@@ -29,7 +29,7 @@ class Export extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:5000/exercise/')
+        axios.get('https://dubatravels.herokuapp.com/exercise/')
             .then(response => {
                 if (response.data.length > 0) {
                     // console.log(response.data)
@@ -42,7 +42,7 @@ class Export extends React.Component {
     }
 
     deleteExercise(id) {
-        axios.delete('http://localhost:5000/exercise/' + id)
+        axios.delete('https://dubatravels.herokuapp.com/exercise/' + id)
             .then(response => {
                 // console.log(response.data)
                 this.setState({

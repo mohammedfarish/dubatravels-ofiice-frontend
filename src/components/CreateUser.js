@@ -35,7 +35,7 @@ class Export extends React.Component {
 
         console.log(user);
 
-        axios.post('http://localhost:5000/user/add', user)
+        axios.post('https://dubatravels.herokuapp.com/user/add', user)
             .then(res => console.log(res.data))
 
         this.setState({

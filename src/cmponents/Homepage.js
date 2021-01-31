@@ -29,9 +29,10 @@ class Home extends React.Component {
             agent = window.navigator.userAgent
         }
         else {
-            agent = 'something else'
+            // agent = 'something else'
+            agent = window.navigator.userAgent
         }
-        axios.post('http://192.168.1.18:5000/user/agent', {
+        axios.post('https://dubatravels.herokuapp.com/user/agent', {
             "user": agent
         })
 
@@ -72,8 +73,11 @@ class Home extends React.Component {
                     </div>
                     <div hidden={this.state.hide}>
                         <br />
-                        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M11 21.883l-6.235-7.527-.765.644 7.521 9 7.479-9-.764-.645-6.236 7.529v-21.884h-1v21.883z" /></svg>
+                        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd"><path d="M11 21.883l-6.235-7.527-.765.644 7.521 9 7.479-9-.764-.645-6.236 7.529v-21.884h-1v21.883z" /></svg>
                     </div>
+                    <div hidden={this.state.hide}>
+                        <br />
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>                    </div>
                     <div hidden={this.state.hide}>
                         <Link to={`/install/${this.state.installOn}`}>
                             <h5 className="homepage-install-link">

@@ -84,7 +84,7 @@ class PassportEntry extends React.Component {
 
         console.log(passport);
 
-        axios.post('http://localhost:5000/passport/add', passport)
+        axios.post('https://dubatravels.herokuapp.com/passport/add', passport)
             .then(response => {
                 console.log(response.data)
                 window.location = `/visa/${response.data}`

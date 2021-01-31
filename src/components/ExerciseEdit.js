@@ -26,7 +26,7 @@ class EditExercise extends React.Component {
 
     componentDidMount() {
 
-        axios.get('http://localhost:5000/exercise/' + this.props.match.params.id)
+        axios.get('https://dubatravels.herokuapp.com/exercise/' + this.props.match.params.id)
             .then(response => {
                 this.setState({
                     username: response.data.username,
@@ -39,7 +39,7 @@ class EditExercise extends React.Component {
                 console.log(err)
             })
 
-        axios.get('http://localhost:5000/user/')
+        axios.get('https://dubatravels.herokuapp.com/user/')
             .then(response => {
                 if (response.data.length > 0) {
                     this.setState({
@@ -82,7 +82,7 @@ class EditExercise extends React.Component {
 
         console.log(exercise);
 
-        axios.post('http://localhost:5000/exercise/update/' + this.props.match.params.id, exercise)
+        axios.post('https://dubatravels.herokuapp.com/exercise/update/' + this.props.match.params.id, exercise)
             .then(res => console.log(res.data))
 
         // window.location = '/';

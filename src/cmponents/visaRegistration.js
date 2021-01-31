@@ -32,7 +32,7 @@ class VisaEntry extends React.Component {
 
     componentDidMount() {
 
-        axios.get('http://localhost:5000/passport/' + this.props.match.params.id)
+        axios.get('https://dubatravels.herokuapp.com/passport/' + this.props.match.params.id)
             .then(response => {
                 // console.log(response)
                 if (response.data) {
@@ -113,7 +113,7 @@ class VisaEntry extends React.Component {
 
         console.log(passport);
 
-        // axios.post('http://localhost:5000/passport/add', passport)
+        // axios.post('https://dubatravels.herokuapp.com/passport/add', passport)
         //     .then(response => {
         //         console.log(response.data)
         //     })

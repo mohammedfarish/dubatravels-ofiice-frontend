@@ -191,7 +191,7 @@ class PassportEntry extends React.Component {
         if (passport.passportNumber.length > 4) {
 
             if (this.state.intent === 'search') {
-                axios.post(`http://192.168.1.18:5000/passport/${this.state.intent}`, passport)
+                axios.post(`https://dubatravels.herokuapp.com/passport/${this.state.intent}`, passport)
                     .then(response => {
                         if (response.data.length > 0) {
                             console.log(response.data)
@@ -228,7 +228,7 @@ class PassportEntry extends React.Component {
             if (this.state.intent === 'add') {
 
                 // console.log(this.state.intent)
-                axios.post(`http://192.168.1.18:5000/passport/${this.state.intent}`, passport)
+                axios.post(`https://dubatravels.herokuapp.com/passport/${this.state.intent}`, passport)
                     .then(response => {
                         if (response.data) {
 
@@ -271,7 +271,7 @@ class PassportEntry extends React.Component {
             }
 
             if (this.state.intent === 'visaAdd') {
-                axios.post(`http://192.168.1.18:5000/visa/${this.state.intent}`, visa)
+                axios.post(`https://dubatravels.herokuapp.com/visa/${this.state.intent}`, visa)
                     .then(response => {
 
                         console.log(response.data)
