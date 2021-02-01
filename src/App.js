@@ -44,14 +44,14 @@ class App extends React.Component {
       session_token = undefined
     }
 
-    axios.post('http://192.168.1.18:5000/user/verify', null, {
+    axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
       headers: {
         "x-auth-token": token
       }
     })
       .then(response => {
         if (response.data) {
-          axios.get('http://192.168.1.18:5000/user', {
+          axios.get('https://dubatravels.herokuapp.com/user', {
             headers: {
               "x-auth-token": token,
               "session_token": session_token
