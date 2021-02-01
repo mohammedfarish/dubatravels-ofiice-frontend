@@ -38,6 +38,7 @@ class App extends React.Component {
         </Router>
       );
     } else {
+
       document.addEventListener('contextmenu', (e) => {
         e.preventDefault();
       });
