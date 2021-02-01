@@ -3,38 +3,39 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./App.css"
 
-import Navbar from "./cmponents/Navbar"
-import searchPAssport from './cmponents/searchPassport'
-import PassportEntry from './cmponents/passportRegistration'
-import VisaEntry from './cmponents/visaRegistration'
-import Register from './cmponents/register'
-import Login from "./cmponents/login";
+import Navbar from "./components/Navbar"
+import searchPAssport from './components/searchPassport'
+import PassportEntry from './components/passportRegistration'
+import VisaEntry from './components/visaRegistration'
+import Register from './components/register'
+import Login from "./components/login";
 
-import Home from './cmponents/Homepage'
-import Install from './cmponents/install/Install'
-import startPWA from './cmponents/startpaw';
+import Home from './components/Homepage'
+import Install from './components/install/Install'
+import startPWA from './components/startpaw';
 
 class App extends React.Component {
 
   render() {
-    // if (!window.matchMedia('(display-mode: standalone)').matches) {
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+
       return (
         <Router>
-          <Switch>
-            <div className="App">
-              <Navbar />
-              <div className="container">
-                <Route path='/new' exact component={Home} />
+          <div className="App">
+            <Navbar />
+            <div className="container">
+              <Switch>
+                <Route path='/' exact component={startPWA} />
                 <Route path='/search' exact component={searchPAssport} />
                 <Route path='/passport' exact component={PassportEntry} />
                 <Route path='/visa/:id' exact component={VisaEntry} />
                 <Route path='/register' exact component={Register} />
                 <Route path='/login' exact component={Login} />
                 <Route path='/startpwa' exact component={startPWA} />
-              </div>
+              </Switch>
             </div>
-          </Switch>
+          </div>
         </Router>
       );
     } else {
