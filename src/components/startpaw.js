@@ -36,6 +36,7 @@ class startPWA extends React.Component {
                     timeout: 5000,
                     maximumAge: 0
                 };
+
                 const success = (pos) => {
                     var crd = pos.coords;
 
