@@ -1,8 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import setCookie from '../functions/setCookies';
-import getCookie from '../functions/getCookie';
-import eraseCookie from '../functions/eraseCookie';
 
 class startPWA extends React.Component {
     constructor(props) {
@@ -31,7 +28,7 @@ class startPWA extends React.Component {
 
                 this.setState({
                     leadingScreen: 1,
-                    loadingMessage: 'creating session'
+                    loadingMessage: 'connecting to the server'
                 })
 
                 var options = {
@@ -78,20 +75,18 @@ class startPWA extends React.Component {
                                 latitude: this.state.latitude,
                                 accuracy: this.state.accuracy
                             };
-                            axios.post('https://dubatravels.herokuapp.com/session', details)
+                            axios.post('http://192.168.1.18:5000/session', details)
                                 .then(response => {
 
                                     const { session_token } = response.data
 
                                     if (session_token) {
 
-                                        const existingCookie = getCookie('session_token');
+                                        const existingSession = window.sessionStorage.getItem('session_token')
 
-                                        if (existingCookie) {
-                                            eraseCookie('session_token');
+                                        if (!existingSession) {
+                                            window.sessionStorage.setItem('session_token', session_token)
                                         }
-
-                                        setCookie('session_token', session_token, 1);
 
                                         this.setState({
                                             leadingScreen: 0,
@@ -119,7 +114,7 @@ class startPWA extends React.Component {
                         } else {
                             this.setState({
                                 loader: 0,
-                                loadingMessage: 'Please enable location access.',
+                                loadingMessage: 'enable location access',
                                 reloadMessage: 1
                             })
                         }

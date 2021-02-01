@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+// import axios from 'axios'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./App.css"
 
@@ -13,8 +14,62 @@ import Login from "./components/login";
 import Home from './components/Homepage'
 import Install from './components/install/Install'
 import startPWA from './components/startpaw';
+import axios from 'axios';
+
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      user: '',
+      token: ''
+    }
+
+  }
+
+  componentDidMount() {
+
+    let token = window.localStorage.getItem('token');
+    if (!token) {
+      window.localStorage.setItem('token', '')
+      token = ""
+    }
+
+    const sessionToken = window.sessionStorage.getItem("session_token");
+    let session_token
+    if (sessionToken) {
+      session_token = sessionToken
+    } else {
+      session_token = undefined
+    }
+
+    axios.post('http://192.168.1.18:5000/user/verify', null, {
+      headers: {
+        "x-auth-token": token
+      }
+    })
+      .then(response => {
+        if (response.data) {
+          axios.get('http://192.168.1.18:5000/user', {
+            headers: {
+              "x-auth-token": token,
+              "session_token": session_token
+            }
+          })
+            .then(response => {
+              if (response.data) {
+                this.setState({
+                  user: response.data,
+                  token: token
+                })
+              }
+            })
+        }
+      })
+
+  }
+
 
   render() {
 
@@ -27,12 +82,12 @@ class App extends React.Component {
             <div className="container">
               <Switch>
                 <Route path='/' exact component={startPWA} />
-                <Route path='/search' exact component={searchPAssport} />
-                <Route path='/passport' exact component={PassportEntry} />
-                <Route path='/visa/:id' exact component={VisaEntry} />
-                <Route path='/register' exact component={Register} />
-                <Route path='/login' exact component={Login} />
-                <Route path='/startpwa' exact component={startPWA} />
+                <Route path='/search' component={searchPAssport} />
+                <Route path='/passport' component={PassportEntry} />
+                <Route path='/visa/:id' component={VisaEntry} />
+                <Route path='/register' component={Register} />
+                <Route path='/login' component={Login} />
+                <Route path='/startpwa' component={startPWA} />
               </Switch>
             </div>
           </div>
@@ -61,6 +116,7 @@ class App extends React.Component {
       );
 
     }
+
   }
 }
 

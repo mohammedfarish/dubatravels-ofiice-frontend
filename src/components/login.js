@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom'
+// import userContext from '../context/userContext';
+// const { setUserData } = React.useContext(userContext)
 
 class Login extends React.Component {
 
@@ -19,6 +21,7 @@ class Login extends React.Component {
             userIP: '',
             userCountryCode: ''
         }
+
     }
 
     componentDidMount() {
@@ -30,6 +33,8 @@ class Login extends React.Component {
         //     .catch(err => {
         //         console.log(err)
         //     })
+
+        // console.log(this.props)
 
         axios.get(`https://freegeoip.app/json/`)
             .then(response => {
@@ -95,11 +100,14 @@ class Login extends React.Component {
     onSubmit(e) {
         e.preventDefault();
 
+        const session_token = window.sessionStorage.getItem("session_token")
+
         const user = {
             username: this.state.username,
             password: this.state.password,
             userIP: this.state.userIP,
-            userCountryCode: this.state.userCountryCode
+            userCountryCode: this.state.userCountryCode,
+            session_token
         }
 
         if (user.password.length < 5) {
@@ -108,9 +116,7 @@ class Login extends React.Component {
             })
         }
 
-        // console.log(user);
-
-        axios.post('https://dubatravels.herokuapp.com/user/login', user)
+        axios.post('http://192.168.1.18:5000/user/login', user)
             .then(res => {
 
                 if (res.data) {
@@ -118,7 +124,12 @@ class Login extends React.Component {
                         this.setState({
                             disableRegisterButton: true
                         })
-                        // window.location = '/'
+                        const existingToken = window.localStorage.getItem('token')
+                        if (existingToken) {
+                            window.localStorage.removeItem('token')
+                        }
+                        window.localStorage.setItem('token', res.data.token)
+                        window.location = '/'
                     } else {
                         this.setState({
                             warning: res.data,
