@@ -18,7 +18,7 @@ class App extends React.Component {
 
   render() {
 
-    if (!window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
 
       return (
         <Router>
@@ -38,6 +38,7 @@ class App extends React.Component {
           </div>
         </Router>
       );
+
     } else {
 
       document.addEventListener('contextmenu', (e) => {
@@ -58,6 +59,7 @@ class App extends React.Component {
           </div>
         </Router>
       );
+
     }
   }
 }
