@@ -75,6 +75,7 @@ class startPWA extends React.Component {
                                 latitude: this.state.latitude,
                                 accuracy: this.state.accuracy
                             };
+
                             axios.post('https://dubatravels.herokuapp.com/session', details)
                                 .then(response => {
 
