@@ -75,7 +75,7 @@ class startPWA extends React.Component {
                                 latitude: this.state.latitude,
                                 accuracy: this.state.accuracy
                             };
-                            axios.post('http://192.168.1.18:5000/session', details)
+                            axios.post('https://dubatravels.herokuapp.com/session', details)
                                 .then(response => {
 
                                     const { session_token } = response.data
