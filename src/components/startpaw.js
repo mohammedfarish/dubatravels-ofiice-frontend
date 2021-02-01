@@ -1,5 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import setCookie from '../functions/setCookies';
+import getCookie from '../functions/getCookie';
+import eraseCookie from '../functions/eraseCookie';
 
 class startPWA extends React.Component {
     constructor(props) {
@@ -75,18 +78,36 @@ class startPWA extends React.Component {
                                 latitude: this.state.latitude,
                                 accuracy: this.state.accuracy
                             };
+                            axios.post('https://dubatravels.herokuapp.com/session', details)
+                                .then(response => {
 
-                            axios.post('https://dubatravels.herokuapp.com/user/agent/', details)
-                                .then((response) => {
-                                    if (response.data) {
+                                    const { session_token } = response.data
+
+                                    if (session_token) {
+
+                                        const existingCookie = getCookie('session_token');
+
+                                        if (existingCookie) {
+                                            eraseCookie('session_token');
+                                        }
+
+                                        setCookie('session_token', session_token, 1);
 
                                         this.setState({
                                             leadingScreen: 0,
                                             hideMessage: 0,
                                         })
 
-                                        window.location = `/${response.data}`
+                                        window.location = `/${response.data.next}`
+
+                                    } else {
+                                        return this.setState({
+                                            loader: 0,
+                                            loadingMessage: 'The server is not responding.',
+                                            reloadMessage: 1
+                                        })
                                     }
+
                                 })
                                 .catch(err => {
                                     return this.setState({
@@ -94,7 +115,6 @@ class startPWA extends React.Component {
                                         loadingMessage: 'Cannot connect to the server.',
                                         reloadMessage: 1
                                     })
-                                    // window.location = "/offline.html"
                                 })
                         } else {
                             this.setState({
