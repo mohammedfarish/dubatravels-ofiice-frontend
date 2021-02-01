@@ -18,7 +18,7 @@ class App extends React.Component {
 
   render() {
 
-    if (!window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
 
       return (
         <Router>
