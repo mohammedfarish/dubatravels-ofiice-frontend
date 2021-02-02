@@ -1,6 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker'
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css"
 
 
@@ -48,11 +49,35 @@ class PassportEntry extends React.Component {
             visaIssueDate: new Date(),
             visaIssueDateInvisibility: '',
             visaDetailsInvisibility: '',
-            updateStatus: ''
+            updateStatus: '',
+            logedin: true
         }
     }
 
     componentDidMount() {
+
+        axios.post('https://travels.mohammedfarish.com/user/verify', null, {
+            headers: {
+                "x-auth-token": window.localStorage.getItem("token")
+            }
+        })
+            .then(response => {
+                console.log(response.data)
+                if (response.data) {
+                    this.setState({
+                        logedin: true
+                    })
+                } else {
+                    this.setState({
+                        logedin: false
+                    })
+                }
+            })
+            .catch(err => {
+                this.setState({
+                    logedin: false
+                })
+            })
 
         const visaStatusesArray = ["Processing", "Confirmed", "Declined"]
         const visaDurationOptionsArray = ['30 Days', "60 Days", "90 Days"]
@@ -74,7 +99,7 @@ class PassportEntry extends React.Component {
             visaStatuses: visaStatusesArray,
             visaDuration: visaDurationOptionsArray[0],
             visaDurationOptions: visaDurationOptionsArray,
-            visaDetailsInvisibility: true
+            visaDetailsInvisibility: true,
         })
     }
 
@@ -167,6 +192,11 @@ class PassportEntry extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
+
+        if (!window.localStorage.getItem("token") ||
+            !window.sessionStorage.getItem("session_token")) {
+            return window.location = "/startpwa";
+        }
 
         const passport = {
             passportNumber: this.state.passportNumber,
@@ -294,176 +324,130 @@ class PassportEntry extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <h1>{this.state.heading}</h1>
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-group" hidden={this.state.validEntry}>
-                        <label>not found</label>
-                    </div>
-                    <div className="form-group">
-                        <label>Passport Number*</label>
-                        <input
-                            autoFocus
-                            autoCorrect="false"
-                            autoComplete="false"
-                            type="text"
-                            readOnly={this.state.lockPassportField}
-                            required
-                            className="form-control"
-                            value={this.state.passportNumber}
-                            onChange={this.onChangePassportNumber}
-                            placeholder="eg: J2323876"
-                        />
-                    </div>
-                    <div hidden={this.state.newPassportFieldHidden}>
-                        <div className="form-group">
-                            <label>First Name*</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={this.state.passportHolderFirstName}
-                                onChange={this.onChangePassportHolderFirstName}
-                                placeholder="eg: John"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Second Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={this.state.passportHolderSecondName}
-                                onChange={this.onChangePassportHolderSecondName}
-                                placeholder="eg: John"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Last Name*</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={this.state.passportHolderLastName}
-                                onChange={this.onChangePassportHolderLastName}
-                                placeholder="eg: John"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Year of Expiry*</label>
-                            <input
-                                type="number"
-                                // required
-                                className="form-control"
-                                value={this.state.passportYearOfExpiry}
-                                onChange={this.onchangeYearOfExpiry}
-                                placeholder="eg: 2021"
-                                max="2100"
-                                min="2021"
-                            />
-                        </div>
 
+        if (this.state.logedin) {
+            return (
+                <div>
+                    <h1 className="page-heading-container">{this.state.heading}</h1>
+                    <form onSubmit={this.onSubmit}>
+                        <div className="form-group" hidden={this.state.validEntry}>
+                            <label>not found</label>
+                        </div>
                         <div className="form-group">
-                        </div>
-                        <label>Smart Services</label>
-                        <div>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="yes"
-                                    checked={this.state.smartServicesOptiIn === 'yes'}
-                                    onChange={this.onChangeSmartServicesOption}
-                                />
-                            Yes
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="no"
-                                    checked={this.state.smartServicesOptiIn === 'no'}
-                                    onChange={this.onChangeSmartServicesOption}
-                                />
-                            No
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <div
-                            className="form-group"
-                            hidden={this.state.smartServiceOTPInvisible}
-                        >
-                            <label>OTP</label>
+                            <label>Passport Number*</label>
                             <input
+                                autoFocus
                                 autoCorrect="false"
                                 autoComplete="false"
                                 type="text"
-                                readOnly
+                                readOnly={this.state.lockPassportField}
+                                required
                                 className="form-control"
-                                value={this.state.smartServiceOTP}
+                                value={this.state.passportNumber}
                                 onChange={this.onChangePassportNumber}
-
+                                placeholder="eg: J2323876"
                             />
                         </div>
-                    </div>
-                    <div
-                        hidden={this.state.newVisaFieldHidden}
-                    >
-                        <div className="form-group">
-                            <label>Status</label>
-                            <select
-                                className="form-control"
-                                value={this.state.visaStatus}
-                                onChange={this.onChangeVisaStatus}>
-                                {
-                                    this.state.visaStatuses.map(function (option) {
-                                        return <option
-                                            key={option}
-                                            value={option}>
-                                            {option}
-                                        </option>
-                                    })
-                                }
-                            </select>
-                        </div>
-                        <div
-                            hidden={this.state.visaDetailsInvisibility}
-                        >
+                        <div hidden={this.state.newPassportFieldHidden}>
                             <div className="form-group">
-                                <label>UID</label>
+                                <label>First Name*</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={this.state.passportHolderFirstName}
+                                    onChange={this.onChangePassportHolderFirstName}
+                                    placeholder="eg: John"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Second Name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={this.state.passportHolderSecondName}
+                                    onChange={this.onChangePassportHolderSecondName}
+                                    placeholder="eg: John"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Last Name*</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={this.state.passportHolderLastName}
+                                    onChange={this.onChangePassportHolderLastName}
+                                    placeholder="eg: John"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Year of Expiry*</label>
+                                <input
+                                    type="number"
+                                    // required
+                                    className="form-control"
+                                    value={this.state.passportYearOfExpiry}
+                                    onChange={this.onchangeYearOfExpiry}
+                                    placeholder="eg: 2021"
+                                    max="2100"
+                                    min="2021"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                            </div>
+                            <label>Smart Services</label>
+                            <div>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="yes"
+                                        checked={this.state.smartServicesOptiIn === 'yes'}
+                                        onChange={this.onChangeSmartServicesOption}
+                                    />
+                            Yes
+                            </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="no"
+                                        checked={this.state.smartServicesOptiIn === 'no'}
+                                        onChange={this.onChangeSmartServicesOption}
+                                    />
+                            No
+                            </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                className="form-group"
+                                hidden={this.state.smartServiceOTPInvisible}
+                            >
+                                <label>OTP</label>
                                 <input
                                     autoCorrect="false"
                                     autoComplete="false"
                                     type="text"
+                                    readOnly
                                     className="form-control"
-                                    value={this.state.visaUID}
-                                    onChange={this.onChangeVisaUID}
-                                    placeholder="eg: 9876998872323876"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>UID</label>
-                                <input
-                                    autoCorrect="false"
-                                    autoComplete="false"
-                                    type="text"
-                                    className="form-control"
-                                    value={this.state.visaUID}
-                                    onChange={this.onChangeVisaUID}
-                                    placeholder="eg: 9876998872323876"
+                                    value={this.state.smartServiceOTP}
+                                    onChange={this.onChangePassportNumber}
+
                                 />
                             </div>
                         </div>
                         <div
-                            hidden={this.state.visaRequestDateInvisibility}
+                            hidden={this.state.newVisaFieldHidden}
                         >
                             <div className="form-group">
-                                <label>Visa Duration</label>
+                                <label>Status</label>
                                 <select
                                     className="form-control"
-                                    value={this.state.visaDuration}
-                                    onChange={this.onChangeVisaDuration}>
+                                    value={this.state.visaStatus}
+                                    onChange={this.onChangeVisaStatus}>
                                     {
-                                        this.state.visaDurationOptions.map(function (option) {
+                                        this.state.visaStatuses.map(function (option) {
                                             return <option
                                                 key={option}
                                                 value={option}>
@@ -473,25 +457,79 @@ class PassportEntry extends React.Component {
                                     }
                                 </select>
                             </div>
-                            <div className="form-group"                            >
-                                <label>Request Date</label>
-                                <div>
-                                    <DatePicker
-                                        readOnly
-                                        selected={this.state.visaRequestDate}
-                                        onChange={this.onChangeVisaRequestDate} />
+                            <div
+                                hidden={this.state.visaDetailsInvisibility}
+                            >
+                                <div className="form-group">
+                                    <label>UID</label>
+                                    <input
+                                        autoCorrect="false"
+                                        autoComplete="false"
+                                        type="text"
+                                        className="form-control"
+                                        value={this.state.visaUID}
+                                        onChange={this.onChangeVisaUID}
+                                        placeholder="eg: 9876998872323876"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>UID</label>
+                                    <input
+                                        autoCorrect="false"
+                                        autoComplete="false"
+                                        type="text"
+                                        className="form-control"
+                                        value={this.state.visaUID}
+                                        onChange={this.onChangeVisaUID}
+                                        placeholder="eg: 9876998872323876"
+                                    />
                                 </div>
                             </div>
-                        </div>
+                            <div
+                                hidden={this.state.visaRequestDateInvisibility}
+                            >
+                                <div className="form-group">
+                                    <label>Visa Duration</label>
+                                    <select
+                                        className="form-control"
+                                        value={this.state.visaDuration}
+                                        onChange={this.onChangeVisaDuration}>
+                                        {
+                                            this.state.visaDurationOptions.map(function (option) {
+                                                return <option
+                                                    key={option}
+                                                    value={option}>
+                                                    {option}
+                                                </option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <div className="form-group"                            >
+                                    <label>Request Date</label>
+                                    <div>
+                                        <DatePicker
+                                            readOnly
+                                            selected={this.state.visaRequestDate}
+                                            onChange={this.onChangeVisaRequestDate} />
+                                    </div>
+                                </div>
+                            </div>
 
-                    </div>
-                    <div className="form-group" hidden={this.state.buttonInvisibility}>
-                        <input type="submit" value={this.state.submitButtonText} className="btn btn-primary" />
-                        {/* <input type="submit" value="clear" className="btn btn-primary" /> */}
-                    </div>
-                </form>
-            </div>
-        )
+                        </div>
+                        <div className="form-group" hidden={this.state.buttonInvisibility}>
+                            <input type="submit" value={this.state.submitButtonText} className="btn btn-primary" />
+                            {/* <input type="submit" value="clear" className="btn btn-primary" /> */}
+                        </div>
+                    </form>
+                </div>
+            )
+        } else {
+            // window.location = "/"
+            return <Redirect to="/login" />
+            // return <hi>hello</hi>
+        }
+
     }
 }
 
