@@ -25,7 +25,7 @@ class Login extends React.Component {
 
     componentDidMount() {
         if (window.localStorage.getItem("token")) {
-            axios.post('https://travels.mohammedfarish.com/user/verify', null, {
+            axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
                 headers: {
                     "x-auth-token": window.localStorage.getItem("token")
                 }
