@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'
-// import userContext from '../context/userContext';
-// const { setUserData } = React.useContext(userContext)
+import { Link, Redirect } from 'react-router-dom'
 
 class Login extends React.Component {
 
@@ -11,6 +9,7 @@ class Login extends React.Component {
 
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
+        this.redirectLogin = this.redirectLogin.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -19,12 +18,36 @@ class Login extends React.Component {
             warning: '',
             disableRegisterButton: '',
             userIP: '',
-            userCountryCode: ''
+            userCountryCode: '',
+            logedin: false
         }
-
     }
 
     componentDidMount() {
+        if (window.localStorage.getItem("token")) {
+            axios.post('https://travels.mohammedfarish.com/user/verify', null, {
+                headers: {
+                    "x-auth-token": window.localStorage.getItem("token")
+                }
+            })
+                .then(response => {
+                    console.log(response.data)
+                    if (response.data) {
+                        this.setState({
+                            logedin: true
+                        })
+                    } else {
+                        this.setState({
+                            logedin: false
+                        })
+                    }
+                })
+                .catch(err => {
+                    this.setState({
+                        logedin: false
+                    })
+                })
+        }
 
         // axios.get('https://beta.mohammedfarish.com/v1/dummy.json')
         //     .then(response => {
@@ -96,9 +119,18 @@ class Login extends React.Component {
 
     }
 
+    redirectLogin() {
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000);
+    }
 
     onSubmit(e) {
         e.preventDefault();
+
+        if (!window.sessionStorage.getItem("session_token")) {
+            return window.location = "/startpwa";
+        }
 
         const session_token = window.sessionStorage.getItem("session_token")
 
@@ -129,7 +161,7 @@ class Login extends React.Component {
                             window.localStorage.removeItem('token')
                         }
                         window.localStorage.setItem('token', res.data.token)
-                        window.location = '/'
+                        return this.redirectLogin()
                     } else {
                         this.setState({
                             warning: res.data,
@@ -149,45 +181,49 @@ class Login extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <div className="page-heading-container">
-                    <h1 className="page-heading" > Login</h1>
-                </div>
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            required
-                            autoFocus
-                            className="form-control"
-                            value={this.state.username}
-                            onChange={this.onChangeUsername}
-                        />
+        if (this.state.logedin) {
+            return <Redirect to="/loggedin" />
+        } else {
+            return (
+                <div>
+                    <div className="page-heading-container">
+                        <h1 className="page-heading" > Login</h1>
                     </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            required
-                            className="form-control"
-                            value={this.state.password}
-                            onChange={this.onChangePassword}
-                        />
-                    </div>
-                    <div className="form-group">
-                        {this.state.warning}
-                    </div>
-                    <div className="form-group buttons">
-                        <input type="submit" value="Login" className="btn btn-primary" disabled={this.state.disableRegisterButton} />
-                        <Link to="/register" >
-                            {/* <input className="btn btn-primary" value="Register" onChange="" /> */}
-                        </Link>
-                    </div>
-                </form>
-            </div>
-        )
+                    <form onSubmit={this.onSubmit}>
+                        <div className="form-group">
+                            <label>Username</label>
+                            <input
+                                type="text"
+                                required
+                                autoFocus
+                                className="form-control"
+                                value={this.state.username}
+                                onChange={this.onChangeUsername}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                required
+                                className="form-control"
+                                value={this.state.password}
+                                onChange={this.onChangePassword}
+                            />
+                        </div>
+                        <div className="form-group">
+                            {this.state.warning}
+                        </div>
+                        <div className="form-group buttons">
+                            <input type="submit" value="Login" className="btn btn-primary" disabled={this.state.disableRegisterButton} />
+                            <Link to="/register" >
+                                {/* <input className="btn btn-primary" value="Register" onChange="" /> */}
+                            </Link>
+                        </div>
+                    </form>
+                </div >
+            )
+        }
     }
 }
 

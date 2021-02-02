@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-// import axios from 'axios'
+import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./App.css"
 
@@ -10,12 +10,14 @@ import PassportEntry from './components/passportRegistration'
 import VisaEntry from './components/visaRegistration'
 import Register from './components/register'
 import Login from "./components/login";
+import Logout from "./components/Logout";
+import LoggedIn from './components/LoggedIn'
 
 import Home from './components/Homepage'
 import Install from './components/install/Install'
 import startPWA from './components/startpaw';
-import axios from 'axios';
 
+import userContext from "./context/userContext";
 
 class App extends React.Component {
   constructor(props) {
@@ -23,25 +25,31 @@ class App extends React.Component {
 
     this.state = {
       user: '',
-      token: ''
+      token: '',
+      test: 'this is a test context',
+      homepage: '/login'
     }
 
   }
 
   componentDidMount() {
 
-    let token = window.localStorage.getItem('token');
-    if (!token) {
-      window.localStorage.setItem('token', '')
-      token = ""
-    }
-
     const sessionToken = window.sessionStorage.getItem("session_token");
     let session_token
+    // console.log()
     if (sessionToken) {
       session_token = sessionToken
     } else {
       session_token = undefined
+      if (window.location.pathname !== '/startpwa') {
+        window.location = "/startpwa"
+      }
+    }
+
+    let token = window.localStorage.getItem('token');
+    if (!token) {
+      window.localStorage.setItem('token', '')
+      token = ""
     }
 
     axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
@@ -61,7 +69,14 @@ class App extends React.Component {
               if (response.data) {
                 this.setState({
                   user: response.data,
-                  token: token
+                  token: token,
+                  homepage: '/loggedin'
+                })
+              } else {
+                this.setState({
+                  user: '',
+                  token: '',
+                  homepage: '/login'
                 })
               }
             })
@@ -76,22 +91,26 @@ class App extends React.Component {
     if (window.matchMedia('(display-mode: standalone)').matches) {
 
       return (
-        <Router>
-          <div className="App">
-            <Navbar />
-            <div className="container">
-              <Switch>
-                <Route path='/' exact component={startPWA} />
-                <Route path='/search' component={searchPAssport} />
-                <Route path='/passport' component={PassportEntry} />
-                <Route path='/visa/:id' component={VisaEntry} />
-                <Route path='/register' component={Register} />
-                <Route path='/login' component={Login} />
-                <Route path='/startpwa' component={startPWA} />
-              </Switch>
+        <userContext.Provider value={this.state}>
+          <Router>
+            <div className="App">
+              <Navbar />
+              <div className="container">
+                <Switch>
+                  <Route path='/' exact component={startPWA} />
+                  <Route path='/search' component={searchPAssport} />
+                  <Route path='/passport' component={PassportEntry} />
+                  <Route path='/visa/:id' component={VisaEntry} />
+                  <Route path='/register' component={Register} />
+                  <Route path='/login' component={Login} />
+                  <Route path='/logout' component={Logout} />
+                  <Route path='/startpwa' component={startPWA} />
+                  <Route path='/loggedin' component={LoggedIn} />
+                </Switch>
+              </div>
             </div>
-          </div>
-        </Router>
+          </Router>
+        </userContext.Provider>
       );
 
     } else {
