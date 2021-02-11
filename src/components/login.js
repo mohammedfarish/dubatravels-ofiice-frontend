@@ -5,7 +5,7 @@ import { Link, Redirect } from 'react-router-dom'
 class Login extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -16,7 +16,7 @@ class Login extends React.Component {
             username: '',
             password: '',
             warning: '',
-            disableRegisterButton: '',
+            disableRegisterButton: true,
             userIP: '',
             userCountryCode: '',
             logedin: false
@@ -24,6 +24,7 @@ class Login extends React.Component {
     }
 
     componentDidMount() {
+
         if (window.localStorage.getItem("token")) {
             axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
                 headers: {
@@ -31,7 +32,6 @@ class Login extends React.Component {
                 }
             })
                 .then(response => {
-                    console.log(response.data)
                     if (response.data) {
                         this.setState({
                             logedin: true
@@ -48,16 +48,6 @@ class Login extends React.Component {
                     })
                 })
         }
-
-        // axios.get('https://beta.mohammedfarish.com/v1/dummy.json')
-        //     .then(response => {
-        //         console.log(response.data)
-        //     })
-        //     .catch(err => {
-        //         console.log(err)
-        //     })
-
-        // console.log(this.props)
 
         axios.get(`https://freegeoip.app/json/`)
             .then(response => {
@@ -121,7 +111,7 @@ class Login extends React.Component {
 
     redirectLogin() {
         setTimeout(() => {
-            window.location.reload()
+            return window.location = "/loggedin"
         }, 2000);
     }
 
@@ -139,7 +129,7 @@ class Login extends React.Component {
             password: this.state.password,
             userIP: this.state.userIP,
             userCountryCode: this.state.userCountryCode,
-            session_token
+            session_token: session_token
         }
 
         if (user.password.length < 5) {

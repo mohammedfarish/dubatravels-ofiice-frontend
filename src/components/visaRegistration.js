@@ -1,8 +1,7 @@
-import axios from 'axios';
 import React from 'react';
-// import axios from 'axios';
-import DatePicker from 'react-datepicker'
+import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css"
+import { Redirect } from 'react-router-dom';
 
 
 class VisaEntry extends React.Component {
@@ -10,188 +9,284 @@ class VisaEntry extends React.Component {
     constructor(props) {
         super(props)
 
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onChangePassportNumber = this.onChangePassportNumber.bind(this)
-        this.onChangeVisaUID = this.onChangeVisaUID.bind(this)
-        this.onChangeVisaStatus = this.onChangeVisaStatus.bind(this)
-        this.onChangeDate = this.onChangeDate.bind(this)
+        this.onChangeCountry = this.onChangeCountry.bind(this)
+        this.onChangeVisa = this.onChangeVisa.bind(this)
+        this.onChangeRequestDate = this.onChangeRequestDate.bind(this)
+        this.onChangeStatus = this.onChangeStatus.bind(this)
+        this.onChangeUID = this.onChangeUID.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
 
         this.state = {
-            passportNumber: 'Invalid Passport',
-            visaUID: '',
-            status: [],
-            visaStatus: '',
-            validFromDate: '',
-            validFromMonth: '',
-            validFromYear: '',
-            validFromUnix: '',
-            date: new Date(),
-            invalid: false
+            countries: [],
+            selectedCountry: '',
+            hideVisaSection: true,
+            visas: [],
+            selectedVisa: '',
+            requestDate: '',
+            statuses: [
+                "Processing",
+                "Approved",
+                "Declined"
+            ],
+            selectedStatus: '',
+            disableSubmiit: true,
+            hideUID: true,
+            UID: '',
+            redirectToPassport: false,
+            hideSuccessMessage: true,
         }
     }
 
     componentDidMount() {
-
-        axios.get('https://dubatravels.herokuapp.com/passport/' + this.props.match.params.id)
+        axios.get('https://dubatravels.herokuapp.com/passport/' + this.props.match.params.id, {
+            headers: {
+                "x-auth-token": window.localStorage.getItem('token')
+            }
+        })
             .then(response => {
                 // console.log(response)
                 if (response.data) {
-                    this.setState({
-                        passportNumber: response.data.passportNumber
-                    })
 
-                    if (response.data.passportNumber.includes('Invalid')) {
-                        this.setState({
-                            invalid: true
+                    axios.post('https://dubatravels.herokuapp.com/visa/countries', null)
+                        .then(response => {
+                            this.setState({
+                                countries: response.data
+                            })
                         })
-                    }
                 }
             })
             .catch(err => {
-                // console.log(err)
-                if (err) {
+
+                return;
+            })
+
+    }
+
+    onChangeCountry(e) {
+        this.setState({
+            selectedCountry: e.target.value,
+            selectedVisa: ''
+        })
+
+        axios.post('https://dubatravels.herokuapp.com/visa/countries', {
+            countryName: e.target.value
+        })
+            .then(response => {
+                if (response.data) {
                     this.setState({
-                        invalid: true
+                        visas: response.data,
+                        hideVisaSection: false
+                    })
+                } else {
+                    this.setState({
+                        visas: [],
+                        hideVisaSection: true,
+                        selectedVisa: ''
                     })
                 }
-
             })
-
-        this.setState({
-            status: ['Select Status', 'Inactive', 'Processing', 'Active'],
-            visaStatus: 'select',
-            invalid: true
-        })
     }
 
-    onChangePassportNumber(e) {
+    onChangeVisa(e) {
         this.setState({
-            passportNumber: e.target.value
+            selectedVisa: e.target.value
         })
-    }
-
-    onChangeVisaUID(e) {
-        this.setState({
-            visaUID: e.target.value
-        })
-    }
-
-    onChangeVisaStatus(e) {
-        if (e.target.value === 'Select Status') {
+        if (this.state.selectedStatus) {
             this.setState({
-                invalid: true
-            })
-        } else {
-            this.setState({
-                invalid: false
+                disableSubmiit: false
             })
         }
+    }
+
+    onChangeStatus(e) {
         this.setState({
-            visaStatus: e.target.value,
+            selectedStatus: e.target.value
+        })
+        if (this.state.selectedVisa) {
+            this.setState({
+                disableSubmiit: false
+            })
+        }
+
+        if (e.target.value === "Approved") {
+            this.setState({
+                hideUID: false
+            })
+
+        } else {
+            this.setState({
+                hideUID: true
+            })
+        }
+    }
+
+    onChangeRequestDate(e) {
+        console.log(e.target.value)
+        this.setState({
+            requestDate: e.target.value
         })
     }
 
-    onChangeDate(date) {
+    onChangeUID(e) {
         this.setState({
-            date: date
+            UID: e.target.value
         })
     }
 
     onSubmit(e) {
         e.preventDefault();
 
-        const passport = {
-            passportNumber: this.state.passportNumber,
-            passportHolderFirstName: this.state.passportHolderFirstName,
-            passportHolderSecondName: this.state.passportHolderSecondName,
-            passportHolderLastName: this.state.passportHolderLastName,
-            yearOfExpiry: this.state.yearOfExpiry,
-            visaUID: this.state.visaUID,
-            visaStatus: this.state.visaStatus,
-            passportHolderMobileNumber: this.state.passportHolderMobileNumber
-        }
 
-        console.log(passport);
 
-        // axios.post('https://dubatravels.herokuapp.com/passport/add', passport)
-        //     .then(response => {
-        //         console.log(response.data)
-        //     })
-        //     .catch((err) => {
-        //         console.log('error', err)
-        //     })
-
-        this.setState({
-            passportNumber: '',
-            visaUID: ''
+        axios.get('https://dubatravels.herokuapp.com/passport/' + this.props.match.params.id, {
+            headers: {
+                "x-auth-token": window.localStorage.getItem('token')
+            }
         })
+            .then(response => {
+                if (response.data) {
+                    const { findPassport } = response.data
+                    const { passportNumber } = findPassport
 
-        // window.location = '/'
+                    const newVisa = {
+                        visaCountry: this.state.selectedCountry,
+                        visaDuration: this.state.selectedVisa,
+                        status: this.state.selectedStatus,
+                        requestDate: new Date(this.state.requestDate),
+                        UID: this.state.UID,
+                        passportNumber,
+                    }
+                    axios.post('https://dubatravels.herokuapp.com/visa/visaAdd', newVisa, {
+                        headers: {
+                            "x-auth-token": window.localStorage.getItem('token')
+                        }
+                    })
+                        .then(response => {
+                            if (response.data) {
+                                this.setState({
+                                    hideSuccessMessage: false
+                                })
+                                setTimeout(() => {
+                                    this.setState({
+                                        redirectToPassport: true
+                                    })
+                                }, 2000);
+                            }
+                        })
+
+                }
+            })
     }
 
     render() {
+
+        if (this.state.redirectToPassport) {
+            return <Redirect to={`/passport/${this.props.match.params.id}`} />
+        }
+
         return (
             <div>
-                <h1>Passport Details</h1>
-                <form onSubmit={this.onSubmit}>
+                <div className="page-heading-container">
+                    <h3>
+                        Visa
+                    </h3>
+                </div>
+                <form
+                    onSubmit={this.onSubmit}
+                >
                     <div className="form-group">
-                        <label>Passport Number*</label>
-                        <input
-                            type="text"
-                            readOnly
-                            className="form-control"
-                            value={this.state.passportNumber}
-                            onChange={this.onChangePassportNumber}
-                            placeholder="eg: J2323876"
-                        />
-                    </div>
-                    <div className="form-group" hidden={this.state.invalid}>
-                        <label>Visa Unique ID*</label>
-                        <input
-                            type="number"
-                            required
-                            className="form-control"
-                            value={this.state.visaUID}
-                            onChange={this.onChangeVisaUID}
-                            placeholder="eg: 674546547"
-                            readOnly={this.state.invalid}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Visa Status*</label>
+                        <label>Country*</label>
                         <select
-                            // ref="userInput"
-                            placeholder="select"
-                            required
                             className="form-control"
-                            value={this.state.visaStatus}
-                            onChange={this.onChangeVisaStatus}
-
+                            required
+                            onChange={this.onChangeCountry}
+                            value={this.state.selectedCountry}
                         >
                             {
-                                this.state.status.map(function (status) {
+                                this.state.countries.map(country => {
                                     return <option
-                                        key={status}
-                                        value={status}
+                                        key={country.countryName}
+                                        value={country.countryName}
                                     >
-                                        {status
-                                        }</option>
+                                        {country.countryName}
+                                    </option>
                                 })
                             }
                         </select>
                     </div>
-                    <div className="form-group" hidden={this.state.invalid}>
-
-                        <DatePicker
-                            value={this.state.date}
-                            onChange={this.onChangeDate}
-                            disabled={this.state.invalid}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input type="submit" value="Submit" className="btn btn-primary" disabled={this.state.invalid} hidden={this.state.invalid} />
+                    <div
+                        hidden={this.state.hideVisaSection}
+                    >
+                        <div className="form-group">
+                            <label>Visa*</label>
+                            <select
+                                className="form-control"
+                                required
+                                onChange={this.onChangeVisa}
+                                value={this.state.selectedVisa}
+                            >
+                                {
+                                    this.state.visas.map(visa => {
+                                        return <option
+                                            key={visa.visaName}
+                                            value={visa.validity}
+                                        >
+                                            {visa.visaName}
+                                        </option>
+                                    })
+                                }
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Status</label>
+                            <select
+                                className="form-control"
+                                onChange={this.onChangeStatus}
+                                value={this.state.selectedStatus}
+                            >
+                                {
+                                    this.state.statuses.map(status => {
+                                        return <option
+                                            key={status}
+                                            value={status}
+                                        >
+                                            {status}
+                                        </option>
+                                    })
+                                }
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Request Date*</label>
+                            <input
+                                className="form-control"
+                                type="date"
+                                required
+                                value={this.state.requestDate}
+                                onChange={this.onChangeRequestDate}
+                            />
+                        </div>
+                        <div hidden={this.state.hideUID} className="form-group">
+                            <label>UID*</label>
+                            <input
+                                className="form-control"
+                                type="number"
+                                value={this.state.UID}
+                                onChange={this.onChangeUID}
+                            />
+                        </div>
+                        <input type="submit" disabled={this.state.disableSubmiit} value="Add Visa" className="btn btn-primary" />
                     </div>
                 </form>
+                <div
+                    hidden={this.state.hideSuccessMessage}
+                    className="success-message"
+                >
+                    <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd">
+                        <path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm7 7.457l-9.005 9.565-4.995-5.865.761-.649 4.271 5.016 8.24-8.752.728.685z" />
+                    </svg>
+                    <label>Success!</label>
+                </div>
             </div>
         )
     }
