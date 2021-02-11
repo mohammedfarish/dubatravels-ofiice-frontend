@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom';
 
 export default class Update extends Component {
     constructor(props) {
@@ -20,6 +21,7 @@ export default class Update extends Component {
                 "Declined"
             ],
             selectedStatus: '',
+            defaulStatus: '',
             passportNumber: '',
             approveDate: '',
             activeDate: '',
@@ -29,7 +31,14 @@ export default class Update extends Component {
             hideActiveDate: true,
             lockUID: true,
             hideUID: true,
-            UID: ''
+            UID: '',
+            approveDateRequired: false,
+            activeDateRequired: false,
+            declineDateRequired: false,
+            UIDRequired: false,
+            warningMessage: '',
+            redirectBackToPassport: false,
+            passportLink: ''
         }
     }
 
@@ -46,7 +55,8 @@ export default class Update extends Component {
 
                     this.setState({
                         passportNumber: response.data.passportNumber,
-                        selectedStatus: response.data.visaStatus
+                        selectedStatus: response.data.visaStatus,
+                        defaulStatus: response.data.visaStatus,
                     })
 
                     if (response.data.visaUID) {
@@ -66,7 +76,8 @@ export default class Update extends Component {
     onChangeStatus(e) {
 
         this.setState({
-            selectedStatus: e.target.value
+            selectedStatus: e.target.value,
+            warningMessage: ''
         })
 
         if (e.target.value === "Approved") {
@@ -74,28 +85,44 @@ export default class Update extends Component {
                 hideApproveDate: false,
                 hideDeclineDate: true,
                 hideActiveDate: true,
-                hideUID: false
+                hideUID: false,
+                approveDateRequired: true,
+                activeDateRequired: false,
+                declineDateRequired: false,
+                UIDRequired: true
             })
         } else if (e.target.value === "Active") {
             this.setState({
                 hideApproveDate: true,
                 hideDeclineDate: true,
                 hideActiveDate: false,
-                hideUID: false
+                hideUID: false,
+                approveDateRequired: false,
+                activeDateRequired: true,
+                declineDateRequired: false,
+                UIDRequired: true
             })
         } else if (e.target.value === "Declined") {
             this.setState({
                 hideApproveDate: true,
                 hideDeclineDate: false,
                 hideActiveDate: true,
-                hideUID: true
+                hideUID: true,
+                approveDateRequired: false,
+                activeDateRequired: false,
+                declineDateRequired: true,
+                UIDRequired: false
             })
         } else {
             this.setState({
                 hideApproveDate: true,
                 hideDeclineDate: true,
                 hideActiveDate: true,
-                hideUID: true
+                hideUID: true,
+                approveDateRequired: false,
+                activeDateRequired: false,
+                declineDateRequired: false,
+                UIDRequired: false
             })
         }
 
@@ -128,9 +155,54 @@ export default class Update extends Component {
     onSubmit(e) {
         e.preventDefault();
 
+        if (this.state.selectedStatus !== this.state.defaulStatus) {
+            const newUpdate = {
+                status: this.state.selectedStatus,
+                passportNumber: this.state.passportNumber,
+                approveDate: new Date(this.state.approveDate),
+                activeDate: new Date(this.state.activeDate),
+                declineDate: new Date(this.state.declineDate),
+                UID: this.state.UID,
+                visaId: this.props.match.params.id
+            }
+
+            axios.post('https://dubatravels.herokuapp.com/visa/update/' + this.props.match.params.id, newUpdate, {
+                headers: {
+                    "x-auth-token": window.localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (response.data) {
+                        console.log(response.data)
+                        axios.post(`https://dubatravels.herokuapp.com/passport/search`, { passportNumber: newUpdate.passportNumber }, {
+                            headers: {
+                                "x-auth-token": window.localStorage.getItem('token')
+                            }
+                        }).then(response => {
+                            if (response.data) {
+                                this.setState({
+                                    passportLink: response.data._id,
+                                    redirectBackToPassport: true,
+                                })
+                            }
+                        })
+                    }
+                })
+        } else {
+
+            return this.setState({
+                warningMessage: 'Status has not changed.'
+            })
+        }
+
     }
 
     render() {
+
+        if (this.state.redirectBackToPassport) {
+            return <Redirect to={`/passport/${this.state.passportLink}`} />
+        }
+
         return (
             <div>
                 <div className="page-heading-container">
@@ -170,9 +242,10 @@ export default class Update extends Component {
                         </select>
                     </div>
                     <div hidden={this.state.hideUID} className="form-group">
-                        <label>UID</label>
+                        <label>UID*</label>
                         <input
                             type="text"
+                            required={this.state.UIDRequired}
                             readOnly={this.state.lockUID}
                             className="form-control"
                             value={this.state.UID}
@@ -183,9 +256,10 @@ export default class Update extends Component {
                         hidden={this.state.hideApproveDate}
                     >
                         <div className="form-group">
-                            <label>Aproval Date</label>
+                            <label>Aproval Date*</label>
                             <input
                                 type="date"
+                                required={this.state.approveDateRequired}
                                 className="form-control"
                                 value={this.state.approveDate}
                                 onChange={this.onChangeApprovalDate}
@@ -196,10 +270,11 @@ export default class Update extends Component {
                         hidden={this.state.hideActiveDate}
                     >
                         <div className="form-group">
-                            <label>Active Date</label>
+                            <label>Active Date*</label>
                             <input
                                 type="date"
                                 className="form-control"
+                                required={this.state.activeDateRequired}
                                 value={this.state.activeDate}
                                 onChange={this.onChangeActiveDate}
                             />
@@ -209,10 +284,11 @@ export default class Update extends Component {
                         hidden={this.state.hideDeclineDate}
                     >
                         <div className="form-group">
-                            <label>Decline Date</label>
+                            <label>Decline Date*</label>
                             <input
                                 type="date"
                                 className="form-control"
+                                required={this.state.declineDateRequired}
                                 value={this.state.declineDate}
                                 onChange={this.onChangeDeclineDate}
                             />
@@ -220,6 +296,7 @@ export default class Update extends Component {
                     </div>
                     <input type="submit" value="Update" className="btn btn-primary" />
                 </form>
+                <span>{this.state.warningMessage}</span>
             </div>
         )
     }

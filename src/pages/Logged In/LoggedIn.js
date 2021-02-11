@@ -44,6 +44,7 @@ class LoggedIn extends React.Component {
                                 </p>
                             </div>
                         </div>
+                        <label className="loggenin-section-label">Customer</label>
                         <div>
                             <Link to="/search" style={{ textDecoration: 'none' }}>
                                 <div className="loggedin-option-container">

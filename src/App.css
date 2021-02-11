@@ -32,13 +32,11 @@
   max-height: 10vh;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   z-index: 99;
-  transition-duration: 0.5s;
 }
 
 .sticky {
   z-index: 100;
   position: fixed;
-  transition-duration: 0.5s;
   top: 0;
   width: 100%;
 }

@@ -19,56 +19,70 @@ class Login extends React.Component {
             disableRegisterButton: true,
             userIP: '',
             userCountryCode: '',
-            logedin: false
+            loggedIn: false,
         }
     }
 
     componentDidMount() {
 
-        if (window.localStorage.getItem("token")) {
-            axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
-                headers: {
-                    "x-auth-token": window.localStorage.getItem("token")
-                }
-            })
+
+
+
+        if (!this.state.loggedIn) {
+            console.log('fetching')
+            axios.get(`https://freegeoip.app/json/`)
                 .then(response => {
-                    if (response.data) {
-                        this.setState({
-                            logedin: true
-                        })
-                    } else {
-                        this.setState({
-                            logedin: false
-                        })
-                    }
-                })
-                .catch(err => {
+                    const { ip, country_code } = response.data
                     this.setState({
-                        logedin: false
+                        userIP: ip,
+                        userCountryCode: country_code
                     })
                 })
+                .catch(err => {
+                    console.log(err)
+                    this.setState({
+                        userIP: ''
+                    })
+                })
+
+            this.setState({
+                username: "",
+                password: "",
+                disableRegisterButton: true,
+            })
+
         }
 
-        axios.get(`https://freegeoip.app/json/`)
-            .then(response => {
-                const { ip, country_code } = response.data
-                this.setState({
-                    userIP: ip,
-                    userCountryCode: country_code
-                })
-            })
-            .catch(err => {
-                console.log(err)
-                this.setState({
-                    userIP: ''
-                })
-            })
+        setTimeout(() => {
 
-        this.setState({
-            username: "",
-            password: "",
-            disableRegisterButton: true,
-        })
+            if (window.localStorage.getItem("token")) {
+                axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
+                    headers: {
+                        "x-auth-token": window.localStorage.getItem("token")
+                    }
+                })
+                    .then(response => {
+                        if (response.data) {
+                            return this.setState({
+                                loggedIn: true,
+                            });
+                        } else {
+                            this.setState({
+                                loggedIn: false,
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        this.setState({
+                            loggedIn: false,
+                        })
+                    })
+            }
+
+        }, 1000);
+
+
+
     }
 
     onChangeUsername(e) {
@@ -152,6 +166,7 @@ class Login extends React.Component {
                         }
                         window.localStorage.setItem('token', res.data.token)
                         return this.redirectLogin()
+
                     } else {
                         this.setState({
                             warning: res.data,
@@ -171,7 +186,7 @@ class Login extends React.Component {
     }
 
     render() {
-        if (this.state.logedin) {
+        if (this.state.loggedIn) {
             return <Redirect to="/loggedin" />
         } else {
             return (

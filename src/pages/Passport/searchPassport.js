@@ -110,28 +110,39 @@ export default class searchPassport extends Component {
         }
 
         if (passport.passportNumber.length > 4) {
-            axios.post(`https://dubatravels.herokuapp.com/passport/search`, passport)
+
+            this.setState({
+                passportNumber: this.state.passportNumber.toUpperCase(),
+                passportNumberFieldReadOnly: true,
+            })
+
+
+            axios.post(`https://dubatravels.herokuapp.com/passport/search`, passport, {
+                headers: {
+                    "x-auth-token": window.localStorage.getItem('token')
+                }
+            })
                 .then(response => {
+
                     if (response.data) {
-                        this.setState({
-                            passportNumberFieldReadOnly: true,
-                            passportLink: `/passport/${response.data._id}`,
-                            passportHolderFirstName: response.data.passportHolderFirstName,
-                            passportHolderLastName: response.data.passportHolderLastName,
-                            nationality: response.data.nationality,
-                            hideSearchResult: false,
-                            hideCancelButton: false
-                        })
+
+                        setTimeout(() => {
+                            this.setState({
+                                passportLink: `/passport/${response.data._id}`,
+                                passportHolderFirstName: response.data.passportHolderFirstName,
+                                passportHolderLastName: response.data.passportHolderLastName,
+                                nationality: response.data.nationality,
+                                hideSearchResult: false,
+                                hideCancelButton: false
+                            })
+                        }, 1000);
 
                     }
                 })
                 .catch(() => {
                     this.setState({
-                        passportNumber: this.state.passportNumber.toUpperCase(),
-                        passportNumberFieldReadOnly: true,
                         hideAddPassportSection: false,
                         hideCancelButton: false
-
                     })
                 })
         }

@@ -71,19 +71,22 @@ class App extends React.Component {
               }
             })
               .then(response => {
-                if (response.data) {
-                  this.setState({
-                    user: response.data,
-                    token: token,
-                    homepage: '/loggedin'
-                  })
-                } else {
-                  this.setState({
-                    user: '',
-                    token: '',
-                    homepage: '/login'
-                  })
-                }
+                setTimeout(() => {
+
+                  if (response.data) {
+                    this.setState({
+                      user: response.data,
+                      token: token,
+                      homepage: '/loggedin'
+                    })
+                  } else {
+                    this.setState({
+                      user: '',
+                      token: '',
+                      homepage: '/login'
+                    })
+                  }
+                }, 2000);
               })
           }
         })
@@ -104,7 +107,6 @@ class App extends React.Component {
       }
 
     }
-
   }
 
 
