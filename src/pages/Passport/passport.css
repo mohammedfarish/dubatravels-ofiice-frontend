@@ -1,0 +1,55 @@
+.passport-search-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.passport-select {
+  text-decoration: none;
+  /* background: green; */
+  align-items: center;
+  transition-duration: 0.4s;
+}
+
+.search-result-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-cancel-button {
+  justify-content: center;
+  display: flex;
+  padding-top: 10%;
+}
+
+/* ======================================= */
+
+.passport-page {
+  padding-bottom: 20%;
+}
+
+.passport-label {
+  font-weight: bolder;
+}
+
+.passport-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.detail {
+  padding-left: 2%;
+  padding-right: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.visa-add-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

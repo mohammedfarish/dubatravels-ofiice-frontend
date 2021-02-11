@@ -1,16 +1,19 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 
 class Logout extends React.Component {
 
     componentDidMount() {
         window.localStorage.setItem("token", "");
+        setTimeout(() => {
+            window.location = "/login"
+        }, 1000);
     }
 
     render() {
-        return setTimeout(() => {
-            <Redirect to="/login" />
-        }, 1000);
+        return (
+            <div>
+            </div>
+        )
     }
 }
 

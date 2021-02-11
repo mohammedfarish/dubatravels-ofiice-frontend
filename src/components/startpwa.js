@@ -95,7 +95,8 @@ class startPWA extends React.Component {
                                         hideMessage: 0,
                                     })
 
-                                    window.location = `/${response.data.next}`
+                                    // window.location = `/${response.data.next}`
+                                    window.location = `/`
 
                                 } else {
                                     return this.setState({
@@ -140,7 +141,7 @@ class startPWA extends React.Component {
     render() {
         return (
             <div>
-                <div className="App pwa-start-page" style={{ opacity: this.state.leadingScreen, transitionDuration: "0.25s" }}>
+                <div className="loading-screan pwa-start-page" style={{ opacity: this.state.leadingScreen, transitionDuration: "0.25s" }}>
                     <div>
                         <img src="/logo.png" alt="logo" width="200vw" />
                     </div>
