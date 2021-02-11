@@ -90,13 +90,16 @@ class startPWA extends React.Component {
                                             window.sessionStorage.setItem('session_token', session_token)
                                         }
 
+
                                         this.setState({
                                             leadingScreen: 0,
                                             hideMessage: 0,
                                         })
+                                        window.location = `/`
 
                                         // window.location = `/${response.data.next}`
-                                        window.location = `/`
+
+
 
                                     } else {
                                         return this.setState({

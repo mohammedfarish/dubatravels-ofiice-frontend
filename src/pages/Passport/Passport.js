@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css"
 
 import './passport.css'
@@ -17,14 +17,14 @@ class Passport extends React.Component {
         this.visaList = this.visaList.bind(this)
 
         this.state = {
-            passportNumber: '',
-            firstName: '',
-            secondName: '',
-            lastName: '',
-            dateOfBirth: '',
-            dateOfExpiry: '',
-            nationality: '',
-            smartServices: '',
+            passportNumber: 'loading',
+            firstName: 'loading',
+            secondName: 'loading',
+            lastName: 'loading',
+            dateOfBirth: 'loading',
+            dateOfExpiry: 'loading',
+            nationality: 'loading',
+            smartServices: 'loading',
             smartServicesUnregistered: false,
             smartServicesRegistrationNumber: '',
             showRegistrationNumber: false,
@@ -267,7 +267,9 @@ class Passport extends React.Component {
                                                 <td>{visa.visaDuration} Days</td>
                                                 <td>{visa.visaStatus}</td>
                                                 <td>
-                                                    Update
+                                                    <Link to={`/visa/update/${visa._id}`}>
+                                                        Update
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         )

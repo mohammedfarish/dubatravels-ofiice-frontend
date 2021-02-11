@@ -27,7 +27,8 @@ export default class AddPassport extends Component {
             nationality: '',
             nationalityList: [],
             redirectToPassport: false,
-            passportLink: ''
+            passportLink: '',
+            lockAllFields: false
         }
     }
     componentDidMount() {
@@ -276,6 +277,9 @@ export default class AddPassport extends Component {
     onSubmit(e) {
         e.preventDefault();
 
+        this.setState({
+            lockAllFields: true
+        })
         const token = window.localStorage.getItem("token")
         const session_token = window.sessionStorage.getItem('session_token')
         if (token) {
@@ -308,10 +312,15 @@ export default class AddPassport extends Component {
 
                                 axios.post("https://dubatravels.herokuapp.com/passport/add", passport)
                                     .then(response => {
-                                        this.setState({
-                                            passportLink: `/passport/${response.data.fetchPassport}`,
-                                            redirectToPassport: true
-                                        })
+
+                                        setTimeout(() => {
+                                            if (response.data) {
+                                                this.setState({
+                                                    passportLink: `/passport/${response.data.fetchPassport}`,
+                                                    redirectToPassport: true
+                                                })
+                                            }
+                                        }, 2000);
                                     })
 
                             })
@@ -353,6 +362,7 @@ export default class AddPassport extends Component {
                     <div className="form-group">
                         <label>First Name*</label>
                         <input
+                            readOnly={this.state.lockAllFields}
                             autoFocus
                             autoCorrect="false"
                             autoComplete="false"
@@ -367,6 +377,7 @@ export default class AddPassport extends Component {
                     <div className="form-group">
                         <label>Second Name</label>
                         <input
+                            readOnly={this.state.lockAllFields}
                             autoCorrect="false"
                             autoComplete="false"
                             type="text"
@@ -379,6 +390,7 @@ export default class AddPassport extends Component {
                     <div className="form-group">
                         <label>Last Name*</label>
                         <input
+                            readOnly={this.state.lockAllFields}
                             autoCorrect="false"
                             autoComplete="false"
                             type="text"
@@ -392,6 +404,7 @@ export default class AddPassport extends Component {
                     <div className="form-group">
                         <label>Nationality*</label>
                         <select
+                            readOnly={this.state.lockAllFields}
                             required
                             className="form-control"
                             onChange={this.onChangeNationality}
@@ -411,6 +424,7 @@ export default class AddPassport extends Component {
                     <div className="form-group">
                         <label>Date of Birth*</label>
                         <input
+                            readOnly={this.state.lockAllFields}
                             autoCorrect="false"
                             autoComplete="false"
                             required
@@ -424,6 +438,7 @@ export default class AddPassport extends Component {
                     <div className="form-group">
                         <label>Date of Expiry*</label>
                         <input
+                            readOnly={this.state.lockAllFields}
                             autoCorrect="false"
                             autoComplete="false"
                             required
@@ -435,7 +450,7 @@ export default class AddPassport extends Component {
                         />
                     </div>
                     <div className="form-group">
-                        <input type="submit" value="Add Passport" className="btn btn-primary" />
+                        <input type="submit" value="Add Passport" disabled={this.state.lockAllFields} className="btn btn-primary" />
                     </div>
                 </form>
             </div>

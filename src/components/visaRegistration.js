@@ -28,7 +28,7 @@ class VisaEntry extends React.Component {
                 "Approved",
                 "Declined"
             ],
-            selectedStatus: '',
+            selectedStatus: "Processing",
             disableSubmiit: true,
             hideUID: true,
             UID: '',
@@ -75,7 +75,8 @@ class VisaEntry extends React.Component {
                 if (response.data) {
                     this.setState({
                         visas: response.data,
-                        hideVisaSection: false
+                        hideVisaSection: false,
+                        selectedVisa: response.data[0]
                     })
                 } else {
                     this.setState({
@@ -85,6 +86,16 @@ class VisaEntry extends React.Component {
                     })
                 }
             })
+        setTimeout(() => {
+
+            if (this.state.selectedStatus &&
+                this.state.selectedVisa) {
+                this.setState({
+                    disableSubmiit: false
+                })
+            }
+        }, 1000);
+
     }
 
     onChangeVisa(e) {
@@ -136,7 +147,9 @@ class VisaEntry extends React.Component {
     onSubmit(e) {
         e.preventDefault();
 
-
+        this.setState({
+            disableSubmiit: true
+        })
 
         axios.get('https://dubatravels.herokuapp.com/passport/' + this.props.match.params.id, {
             headers: {
