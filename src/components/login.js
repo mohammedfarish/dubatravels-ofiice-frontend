@@ -26,7 +26,31 @@ class Login extends React.Component {
     componentDidMount() {
 
 
-
+        if (window.localStorage.getItem("token")) {
+            axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
+                headers: {
+                    "x-auth-token": window.localStorage.getItem("token")
+                }
+            })
+                .then(response => {
+                    if (response.data) {
+                        return this.setState({
+                            loggedIn: true,
+                        });
+                    } else {
+                        window.localStorage.setItem("token", "")
+                        this.setState({
+                            loggedIn: false,
+                        })
+                    }
+                })
+                .catch(err => {
+                    window.localStorage.setItem("token", "")
+                    this.setState({
+                        loggedIn: false,
+                    })
+                })
+        }
 
         if (!this.state.loggedIn) {
             console.log('fetching')
@@ -52,36 +76,6 @@ class Login extends React.Component {
             })
 
         }
-
-        setTimeout(() => {
-
-            if (window.localStorage.getItem("token")) {
-                axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
-                    headers: {
-                        "x-auth-token": window.localStorage.getItem("token")
-                    }
-                })
-                    .then(response => {
-                        if (response.data) {
-                            return this.setState({
-                                loggedIn: true,
-                            });
-                        } else {
-                            this.setState({
-                                loggedIn: false,
-                            })
-                        }
-                    })
-                    .catch(err => {
-                        this.setState({
-                            loggedIn: false,
-                        })
-                    })
-            }
-
-        }, 1000);
-
-
 
     }
 

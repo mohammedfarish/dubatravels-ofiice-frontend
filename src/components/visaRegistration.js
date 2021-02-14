@@ -60,6 +60,9 @@ class VisaEntry extends React.Component {
                 return;
             })
 
+        // this.setState({
+        //     selectedVisa: ''
+        // })
     }
 
     onChangeCountry(e) {
@@ -76,7 +79,7 @@ class VisaEntry extends React.Component {
                     this.setState({
                         visas: response.data,
                         hideVisaSection: false,
-                        selectedVisa: response.data[0]
+                        selectedVisa: response.data[0].validity
                     })
                 } else {
                     this.setState({
@@ -168,6 +171,7 @@ class VisaEntry extends React.Component {
                         requestDate: new Date(this.state.requestDate),
                         UID: this.state.UID,
                         passportNumber,
+                        lastUpdate: new Date()
                     }
                     axios.post('https://dubatravels.herokuapp.com/visa/visaAdd', newVisa, {
                         headers: {

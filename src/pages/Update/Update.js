@@ -163,7 +163,8 @@ export default class Update extends Component {
                 activeDate: new Date(this.state.activeDate),
                 declineDate: new Date(this.state.declineDate),
                 UID: this.state.UID,
-                visaId: this.props.match.params.id
+                visaId: this.props.match.params.id,
+                lastUpdate: new Date()
             }
 
             axios.post('https://dubatravels.herokuapp.com/visa/update/' + this.props.match.params.id, newUpdate, {

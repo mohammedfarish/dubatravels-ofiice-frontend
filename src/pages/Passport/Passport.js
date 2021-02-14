@@ -275,9 +275,6 @@ class Passport extends React.Component {
                                         )
                                     })
                                 }
-                                {/* <Visa
-                                
-                                /> */}
                             </tbody>
                         </table>
                     </div>

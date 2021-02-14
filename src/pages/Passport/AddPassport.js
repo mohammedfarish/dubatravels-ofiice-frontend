@@ -312,15 +312,23 @@ export default class AddPassport extends Component {
 
                                 axios.post("https://dubatravels.herokuapp.com/passport/add", passport)
                                     .then(response => {
+                                        if (response.data) {
 
-                                        setTimeout(() => {
-                                            if (response.data) {
-                                                this.setState({
-                                                    passportLink: `/passport/${response.data.fetchPassport}`,
-                                                    redirectToPassport: true
-                                                })
-                                            }
-                                        }, 2000);
+                                            this.setState({
+                                                passportLink: `/passport/${response.data.fetchPassport}`,
+                                            })
+                                            setTimeout(() => {
+                                                if (response.data) {
+                                                    this.setState({
+                                                        redirectToPassport: true
+                                                    })
+                                                }
+                                            }, 2000);
+
+                                        }
+                                    })
+                                    .catch(() => {
+                                        return;
                                     })
 
                             })

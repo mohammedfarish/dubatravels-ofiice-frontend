@@ -53,13 +53,20 @@ class LoggedIn extends React.Component {
                                     </h2>
                                 </div>
                             </Link>
-                            <Link to="/visa/update/602469c1115945093c43938b" style={{ textDecoration: 'none' }}>
+                            <Link to="/visa/pending" style={{ textDecoration: 'none' }}>
+                                <div className="loggedin-option-container">
+                                    <h2 className="loggedin-option">
+                                        Pending Visas
+                                    </h2>
+                                </div>
+                            </Link>
+                            {/* <Link to="/visa/pending" style={{ textDecoration: 'none' }}>
                                 <div className="loggedin-option-container">
                                     <h2 className="loggedin-option">
                                         Other Option
                                     </h2>
                                 </div>
-                            </Link>
+                            </Link> */}
 
                             <br />
 
