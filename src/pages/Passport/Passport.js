@@ -255,7 +255,6 @@ class Passport extends React.Component {
                                     <th>Country</th>
                                     <th>Duration</th>
                                     <th>Status</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -265,14 +264,14 @@ class Passport extends React.Component {
                                             <tr
                                                 key={visa._id}
                                             >
-                                                <td>{visa.visaCountry}</td>
-                                                <td>{visa.visaDuration} Days</td>
-                                                <td>{visa.visaStatus}</td>
                                                 <td>
-                                                    <Link to={`/visa/update/${visa._id}`}>
-                                                        Update
+                                                    <Link to={`/visa/${visa._id}`}>
+                                                        {visa.visaCountry}
                                                     </Link>
                                                 </td>
+                                                <td>{visa.visaDuration} Days</td>
+                                                <td>{visa.visaStatus}</td>
+
                                             </tr>
                                         )
                                     })

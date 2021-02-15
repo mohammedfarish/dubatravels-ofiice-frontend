@@ -297,7 +297,7 @@ export default class AddPassport extends Component {
                 }
             })
                 .then(response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     if (response.data) {
 
                         axios.get('https://dubatravels.herokuapp.com/user/', {

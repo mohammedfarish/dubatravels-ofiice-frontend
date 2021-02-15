@@ -163,7 +163,7 @@ class Register extends React.Component {
 
         axios.post('https://dubatravels.herokuapp.com/user/register', user)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 if (res.data === "Success!") {
                     this.setState({
                         username: "",

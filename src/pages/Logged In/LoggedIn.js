@@ -82,7 +82,7 @@ class LoggedIn extends React.Component {
                                 <Link to="/add/visa" style={{ textDecoration: 'none' }}>
                                     <div className="loggedin-option-container">
                                         <h2 className="loggedin-option">
-                                            Add Visas
+                                            Visas
                                         </h2>
                                     </div>
                                 </Link>
@@ -96,7 +96,7 @@ class LoggedIn extends React.Component {
                                     onClick={() => window.location.reload()}>
                                     <div className="loggedin-option-container">
                                         <h2 className="loggedin-option">
-                                            Refresh
+                                            Update
                                         </h2>
                                     </div>
                                 </div>

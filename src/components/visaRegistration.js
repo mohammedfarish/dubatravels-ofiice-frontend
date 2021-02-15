@@ -14,6 +14,9 @@ class VisaEntry extends React.Component {
         this.onChangeRequestDate = this.onChangeRequestDate.bind(this)
         this.onChangeStatus = this.onChangeStatus.bind(this)
         this.onChangeUID = this.onChangeUID.bind(this)
+        this.onChangeGuarantorName = this.onChangeGuarantorName.bind(this)
+        this.onChangeGuarantorContactNumber = this.onChangeGuarantorContactNumber.bind(this)
+        this.onChangeGuarantorDescription = this.onChangeGuarantorDescription.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
 
         this.state = {
@@ -34,6 +37,9 @@ class VisaEntry extends React.Component {
             UID: '',
             redirectToPassport: false,
             hideSuccessMessage: true,
+            guarantorName: '',
+            guarantorNumber: '',
+            guarantorDescription: ''
         }
     }
 
@@ -135,7 +141,7 @@ class VisaEntry extends React.Component {
     }
 
     onChangeRequestDate(e) {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         this.setState({
             requestDate: e.target.value
         })
@@ -144,6 +150,22 @@ class VisaEntry extends React.Component {
     onChangeUID(e) {
         this.setState({
             UID: e.target.value
+        })
+    }
+
+    onChangeGuarantorName(e) {
+        this.setState({
+            guarantorName: e.target.value
+        })
+    }
+    onChangeGuarantorContactNumber(e) {
+        this.setState({
+            guarantorNumber: e.target.value
+        })
+    }
+    onChangeGuarantorDescription(e) {
+        this.setState({
+            guarantorDescription: e.target.value
         })
     }
 
@@ -171,7 +193,10 @@ class VisaEntry extends React.Component {
                         requestDate: new Date(this.state.requestDate),
                         UID: this.state.UID,
                         passportNumber,
-                        lastUpdate: new Date()
+                        lastUpdate: new Date(),
+                        guarantorName: this.state.guarantorName,
+                        guarantorNumber: this.state.guarantorNumber,
+                        guarantorDescription: this.state.guarantorDescription,
                     }
                     axios.post('https://dubatravels.herokuapp.com/visa/visaAdd', newVisa, {
                         headers: {
@@ -291,6 +316,37 @@ class VisaEntry extends React.Component {
                                 value={this.state.UID}
                                 onChange={this.onChangeUID}
                             />
+                        </div>
+                        <div>
+                            <div>
+                                <label>Guarantor Name*</label>
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    required
+                                    value={this.state.guarantorName}
+                                    onChange={this.onChangeGuarantorName}
+                                />
+                            </div>
+                            <div>
+                                <label>Guarantor Contact Number*</label>
+                                <input
+                                    className="form-control"
+                                    type="tel"
+                                    required
+                                    value={this.state.guarantorNumber}
+                                    onChange={this.onChangeGuarantorContactNumber}
+                                />
+                            </div>
+                            <div>
+                                <label>Guarantor Description</label>
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    value={this.state.guarantorDescription}
+                                    onChange={this.onChangeGuarantorDescription}
+                                />
+                            </div>
                         </div>
                         <input type="submit" disabled={this.state.disableSubmiit} value="Add Visa" className="btn btn-primary" />
                     </div>

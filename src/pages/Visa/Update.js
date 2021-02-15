@@ -51,7 +51,7 @@ export default class Update extends Component {
         })
             .then(response => {
                 if (response.data) {
-                    console.log(response.data)
+                    // console.log(response.data)
 
                     this.setState({
                         passportNumber: response.data.passportNumber,
@@ -61,7 +61,9 @@ export default class Update extends Component {
 
                     if (response.data.visaUID) {
                         this.setState({
-                            lockUID: true
+                            lockUID: true,
+                            hideUID: false,
+                            UID: response.data.visaUID
                         })
                     } else {
                         this.setState({
@@ -174,7 +176,7 @@ export default class Update extends Component {
             })
                 .then(response => {
                     if (response.data) {
-                        console.log(response.data)
+                        // console.log(response.data)
                         axios.post(`https://dubatravels.herokuapp.com/passport/search`, { passportNumber: newUpdate.passportNumber }, {
                             headers: {
                                 "x-auth-token": window.localStorage.getItem('token')
