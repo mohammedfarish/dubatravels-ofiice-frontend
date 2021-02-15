@@ -95,15 +95,7 @@ class VisaEntry extends React.Component {
                     })
                 }
             })
-        setTimeout(() => {
 
-            if (this.state.selectedStatus &&
-                this.state.selectedVisa) {
-                this.setState({
-                    disableSubmiit: false
-                })
-            }
-        }, 1000);
 
     }
 
@@ -111,22 +103,12 @@ class VisaEntry extends React.Component {
         this.setState({
             selectedVisa: e.target.value
         })
-        if (this.state.selectedStatus) {
-            this.setState({
-                disableSubmiit: false
-            })
-        }
     }
 
     onChangeStatus(e) {
         this.setState({
             selectedStatus: e.target.value
         })
-        if (this.state.selectedVisa) {
-            this.setState({
-                disableSubmiit: false
-            })
-        }
 
         if (e.target.value === "Approved") {
             this.setState({
@@ -171,11 +153,9 @@ class VisaEntry extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-
         this.setState({
             disableSubmiit: true
         })
-
         axios.get('https://dubatravels.herokuapp.com/passport/' + this.props.match.params.id, {
             headers: {
                 "x-auth-token": window.localStorage.getItem('token')
@@ -198,6 +178,7 @@ class VisaEntry extends React.Component {
                         guarantorNumber: this.state.guarantorNumber,
                         guarantorDescription: this.state.guarantorDescription,
                     }
+
                     axios.post('https://dubatravels.herokuapp.com/visa/visaAdd', newVisa, {
                         headers: {
                             "x-auth-token": window.localStorage.getItem('token')
@@ -206,7 +187,7 @@ class VisaEntry extends React.Component {
                         .then(response => {
                             if (response.data) {
                                 this.setState({
-                                    hideSuccessMessage: false
+                                    hideSuccessMessage: false,
                                 })
                                 setTimeout(() => {
                                     this.setState({
@@ -215,8 +196,13 @@ class VisaEntry extends React.Component {
                                 }, 2000);
                             }
                         })
-
+                        .catch((err) => {
+                            console.log(err)
+                        })
                 }
+            })
+            .catch((err) => {
+                console.log(err)
             })
     }
 
@@ -264,6 +250,7 @@ class VisaEntry extends React.Component {
                             <select
                                 className="form-control"
                                 required
+                                autoFocus
                                 onChange={this.onChangeVisa}
                                 value={this.state.selectedVisa}
                             >
@@ -348,7 +335,7 @@ class VisaEntry extends React.Component {
                                 />
                             </div>
                         </div>
-                        <input type="submit" disabled={this.state.disableSubmiit} value="Add Visa" className="btn btn-primary" />
+                        <input type="submit" value="Add Visa" className="btn btn-primary" />
                     </div>
                 </form>
                 <div
