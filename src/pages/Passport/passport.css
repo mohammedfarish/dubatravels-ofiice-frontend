@@ -53,3 +53,9 @@
   justify-content: center;
   align-items: center;
 }
+
+.passport-next-action-section {
+  display: flex;
+  /* background: green; */
+  justify-content: space-around;
+}

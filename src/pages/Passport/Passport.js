@@ -38,100 +38,102 @@ class Passport extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id
+        setTimeout(() => {
+            axios.get('https://dubatravels.herokuapp.com/passport/' + id, {
+                headers: {
+                    "x-auth-token": window.localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (response.data) {
+                        const {
+                            _id,
+                            passportHolderFirstName,
+                            passportHolderSecondName,
+                            passportHolderLastName,
+                            dateOfBirth,
+                            dateOfExpiry,
+                            nationality,
+                            passportHolderMobileNumber,
+                            passportNumber,
 
-        axios.get('https://dubatravels.herokuapp.com/passport/' + id, {
-            headers: {
-                "x-auth-token": window.localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                if (response.data) {
-                    const {
-                        _id,
-                        passportHolderFirstName,
-                        passportHolderSecondName,
-                        passportHolderLastName,
-                        dateOfBirth,
-                        dateOfExpiry,
-                        nationality,
-                        passportHolderMobileNumber,
-                        passportNumber
-                        // entryBy
-                    } = response.data.findPassport
-                    this.setState({
-                        firstName: passportHolderFirstName,
-                        secondName: passportHolderSecondName || '-',
-                        lastName: passportHolderLastName,
-                        dateOfBirth,
-                        dateOfExpiry,
-                        nationality,
-                        mobileNumbers: passportHolderMobileNumber || '-',
-                        passportNumber,
-                        passportId: _id
-                    })
+                        } = response.data.findPassport
 
-                    if (response.data.unregistered) {
                         this.setState({
-                            smartServices: 'Unregistered',
-                            smartServicesUnregistered: true,
-                            smartServicesRegistrationNumber: response.data.unregistered.OTP
+                            firstName: passportHolderFirstName,
+                            secondName: passportHolderSecondName || '-',
+                            lastName: passportHolderLastName,
+                            dateOfBirth,
+                            dateOfExpiry,
+                            nationality,
+                            mobileNumbers: passportHolderMobileNumber || '-',
+                            passportNumber,
+                            passportId: _id
                         })
 
-                        this.checkRegistration = setInterval(() => {
-                            axios.post('https://dubatravels.herokuapp.com/passport/registration', {
-                                passportNumber: passportNumber
+                        if (response.data.unregistered) {
+                            this.setState({
+                                smartServices: 'Unregistered',
+                                smartServicesUnregistered: true,
+                                smartServicesRegistrationNumber: response.data.unregistered.OTP
                             })
-                                .then(response => {
-                                    if (!response.data) {
-                                        clearTimeout(this.showRegNumber)
-                                        this.setState({
-                                            smartServices: 'Registered',
-                                            smartServicesUnregistered: false,
-                                            smartServicesRegistrationNumber: ''
-                                        })
-                                        clearInterval(this.checkRegistration)
-                                    }
-                                })
-                                .catch(() => {
-                                    return;
-                                })
-                        }, 1000 * 5);
-                    } else {
-                        this.setState({
-                            smartServices: 'Registered',
-                        })
-                    }
 
-                    axios.get('https://dubatravels.herokuapp.com/visa/' + passportNumber, {
-                        headers: {
-                            "x-auth-token": window.localStorage.getItem('token')
-                        }
-                    })
-                        .then(response => {
-                            if (response.data[0]._id) {
-                                this.setState({
-                                    visas: response.data
+                            this.checkRegistration = setInterval(() => {
+                                axios.post('https://dubatravels.herokuapp.com/passport/registration', {
+                                    passportNumber: passportNumber
                                 })
-                            } else {
+                                    .then(response => {
+                                        if (!response.data) {
+                                            clearTimeout(this.showRegNumber)
+                                            this.setState({
+                                                smartServices: 'Registered',
+                                                smartServicesUnregistered: false,
+                                                smartServicesRegistrationNumber: ''
+                                            })
+                                            clearInterval(this.checkRegistration)
+                                        }
+                                    })
+                                    .catch(() => {
+                                        return;
+                                    })
+                            }, 1000 * 5);
+                        } else {
+                            this.setState({
+                                smartServices: 'Registered',
+                            })
+                        }
+
+                        axios.get('https://dubatravels.herokuapp.com/visa/' + passportNumber, {
+                            headers: {
+                                "x-auth-token": window.localStorage.getItem('token')
+                            }
+                        })
+                            .then(response => {
+                                if (response.data[0]._id) {
+                                    this.setState({
+                                        visas: response.data
+                                    })
+                                } else {
+                                    this.setState({
+                                        visas: []
+                                    })
+
+                                }
+                            })
+                            .catch(() => {
                                 this.setState({
                                     visas: []
                                 })
-
-                            }
-                        })
-                        .catch(() => {
-                            this.setState({
-                                visas: []
                             })
-                        })
 
-                }
-            })
-            .catch(() => {
-                this.setState({
-                    forwardToHome: true
+                    }
                 })
-            })
+                .catch(() => {
+                    this.setState({
+                        forwardToHome: true
+                    })
+                })
+        }, 2000);
     }
 
     componentWillUnmount() {
