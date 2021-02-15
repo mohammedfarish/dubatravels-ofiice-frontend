@@ -16,7 +16,6 @@ export default class AddPassport extends Component {
         this.onChangeDateOfBirth = this.onChangeDateOfBirth.bind(this)
         this.onChangeNationality = this.onChangeNationality.bind(this)
         this.redirectToPassport = this.redirectToPassport.bind(this)
-        this.redirectHome = this.redirectHome.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
 
         this.state = {
@@ -32,7 +31,6 @@ export default class AddPassport extends Component {
             passportLink: '',
             lockAllFields: false,
             hideNextSectionButtons: true,
-            redirectHome: false
         }
     }
     componentDidMount() {
@@ -283,11 +281,6 @@ export default class AddPassport extends Component {
             redirectToPassport: true
         })
     }
-    redirectHome() {
-        this.setState({
-            redirectHome: true
-        })
-    }
 
     onSubmit(e) {
         e.preventDefault();
@@ -329,8 +322,7 @@ export default class AddPassport extends Component {
                                     .then(response => {
                                         if (response.data) {
                                             this.setState({
-                                                passportLink: `/passport/${response.data.fetchPassport}`,
-                                                hideNextSectionButtons: false
+                                                redirectToPassport: true
                                             })
                                         }
                                     })
@@ -351,10 +343,7 @@ export default class AddPassport extends Component {
     render() {
 
         if (this.state.redirectToPassport) {
-            return <Redirect to={this.state.passportLink} />
-        }
-        if (this.state.redirectHome) {
-            return <Redirect to="/loggedin" />
+            return <Redirect to="/passport/list" />
         }
 
         return (
@@ -471,12 +460,6 @@ export default class AddPassport extends Component {
                         <input type="submit" value="Add Passport" disabled={this.state.lockAllFields} className="btn btn-primary" />
                     </div>
                 </form>
-                <div className="passport-next-action-section"
-                    hidden={this.state.hideNextSectionButtons}
-                >
-                    <input type="button" onClick={this.redirectToPassport} value="Open Passport" className="btn btn-primary" />
-                    <input type="button" onClick={this.redirectHome} value="Home" className="btn btn-primary" />
-                </div>
             </div>
         )
     }

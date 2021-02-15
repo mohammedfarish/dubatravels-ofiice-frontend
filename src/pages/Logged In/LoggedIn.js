@@ -53,6 +53,13 @@ class LoggedIn extends React.Component {
                                     </h2>
                                 </div>
                             </Link>
+                            <Link to="/passport/list" style={{ textDecoration: 'none' }}>
+                                <div className="loggedin-option-container">
+                                    <h2 className="loggedin-option">
+                                        Passports
+                                    </h2>
+                                </div>
+                            </Link>
                             <Link to="/visa/pending" style={{ textDecoration: 'none' }}>
                                 <div className="loggedin-option-container">
                                     <h2 className="loggedin-option">
@@ -60,7 +67,7 @@ class LoggedIn extends React.Component {
                                     </h2>
                                 </div>
                             </Link>
-                            {/* <Link to="/visa/pending" style={{ textDecoration: 'none' }}>
+                            {/* <Link to="/passport/list" style={{ textDecoration: 'none' }}>
                                 <div className="loggedin-option-container">
                                     <h2 className="loggedin-option">
                                         Other Option

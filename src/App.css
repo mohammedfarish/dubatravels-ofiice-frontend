@@ -40,6 +40,9 @@
   top: 0;
   width: 100%;
 }
+.table {
+  overflow-x: auto;
+}
 
 .header-logo {
   height: 10vh;

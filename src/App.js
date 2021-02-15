@@ -23,6 +23,7 @@ import VisaUpdate from './pages/Update/Update'
 
 import userContext from "./context/userContext";
 import PendingVisa from './pages/Visa/PendingVisa';
+import List from './pages/Passport/List';
 class App extends React.Component {
 
   constructor(props) {
@@ -128,6 +129,7 @@ class App extends React.Component {
                       <Route path='/visa/add/:id' component={VisaEntry} />
                       <Route path='/visa/update/:id' component={VisaUpdate} />
                       <Route path='/visa/pending' component={PendingVisa} />
+                      <Route path='/passport/list' exact component={List} />
                       <Route path='/passport/add/:id' exact component={AddPassport} />
                       <Route path='/passport/:id' exact component={Passport} />
                       <Route path='/add/visa' exact component={Visa} />
