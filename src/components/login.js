@@ -53,7 +53,7 @@ class Login extends React.Component {
         }
 
         if (!this.state.loggedIn) {
-            console.log('fetching')
+            // console.log('fetching')
             axios.get(`https://freegeoip.app/json/`)
                 .then(response => {
                     const { ip, country_code } = response.data

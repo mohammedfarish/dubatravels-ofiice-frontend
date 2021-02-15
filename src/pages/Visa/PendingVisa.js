@@ -100,8 +100,8 @@ export default class PendingVisa extends Component {
                                                     Passport
                                                 </Link>
                                                 <br />
-                                                <Link to={`/visa/update/${visa._id}`}>
-                                                    Update
+                                                <Link to={`/visa/${visa._id}`}>
+                                                    Visa
                                                 </Link>
                                             </td>
                                         </tr>

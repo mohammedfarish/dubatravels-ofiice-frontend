@@ -18,12 +18,14 @@ import Install from './components/install/Install'
 import startPWA from './components/startpwa';
 
 import AddPassport from './pages/Passport/AddPassport';
-import Visa from './pages/Add/Visa';
-import VisaUpdate from './pages/Update/Update'
+import AddVisa from './pages/Add/Visa';
+import VisaUpdate from './pages/Visa/Update'
 
 import userContext from "./context/userContext";
 import PendingVisa from './pages/Visa/PendingVisa';
 import List from './pages/Passport/List';
+import Visa from './pages/Visa/Visa';
+
 class App extends React.Component {
 
   constructor(props) {
@@ -132,7 +134,8 @@ class App extends React.Component {
                       <Route path='/passport/list' exact component={List} />
                       <Route path='/passport/add/:id' exact component={AddPassport} />
                       <Route path='/passport/:id' exact component={Passport} />
-                      <Route path='/add/visa' exact component={Visa} />
+                      <Route path='/visa/:id' exact component={Visa} />
+                      <Route path='/add/visa' exact component={AddVisa} />
                       <Route path='/logout' component={Logout} />
                       <Route path='/loggedin' component={LoggedIn} />
                       <Route path='/startpwa' component={startPWA} />
