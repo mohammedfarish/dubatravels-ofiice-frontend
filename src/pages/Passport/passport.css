@@ -56,6 +56,10 @@
 
 .passport-next-action-section {
   display: flex;
-  /* background: green; */
   justify-content: space-around;
+}
+
+.loading-passport-list {
+  display: flex;
+  justify-content: center;
 }
