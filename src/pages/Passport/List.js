@@ -8,7 +8,8 @@ export default class List extends Component {
         super(props)
 
         this.state = {
-            passports: []
+            passports: [],
+            hideLoading: false
         }
     }
 
@@ -19,7 +20,8 @@ export default class List extends Component {
             }
         }).then(response => {
             this.setState({
-                passports: response.data
+                passports: response.data,
+                hideLoading: true
             })
         })
     }
@@ -29,7 +31,7 @@ export default class List extends Component {
             <div>
                 <div className="page-heading-container">
                     <h1>
-                        List
+                        Passports
                     </h1>
                 </div>
                 <div>
@@ -61,6 +63,13 @@ export default class List extends Component {
                             }
                         </tbody>
                     </table>
+                    <div
+                        className="loading-passport-list"
+                        hidden={this.state.hideLoading}
+                        style={{ opacity: 0.5 }}
+                    >
+                        <h3>Loading</h3>
+                    </div>
                 </div>
             </div>
         )
