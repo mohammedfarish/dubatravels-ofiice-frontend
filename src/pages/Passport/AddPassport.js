@@ -15,6 +15,8 @@ export default class AddPassport extends Component {
         this.onChangeDateOfExpiry = this.onChangeDateOfExpiry.bind(this)
         this.onChangeDateOfBirth = this.onChangeDateOfBirth.bind(this)
         this.onChangeNationality = this.onChangeNationality.bind(this)
+        this.redirectToPassport = this.redirectToPassport.bind(this)
+        this.redirectHome = this.redirectHome.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
 
         this.state = {
@@ -28,7 +30,9 @@ export default class AddPassport extends Component {
             nationalityList: [],
             redirectToPassport: false,
             passportLink: '',
-            lockAllFields: false
+            lockAllFields: false,
+            hideNextSectionButtons: true,
+            redirectHome: false
         }
     }
     componentDidMount() {
@@ -274,6 +278,17 @@ export default class AddPassport extends Component {
         })
     }
 
+    redirectToPassport() {
+        this.setState({
+            redirectToPassport: true
+        })
+    }
+    redirectHome() {
+        this.setState({
+            redirectHome: true
+        })
+    }
+
     onSubmit(e) {
         e.preventDefault();
 
@@ -315,6 +330,7 @@ export default class AddPassport extends Component {
                                         if (response.data) {
                                             this.setState({
                                                 passportLink: `/passport/${response.data.fetchPassport}`,
+                                                hideNextSectionButtons: false
                                             })
                                         }
                                     })
@@ -334,8 +350,11 @@ export default class AddPassport extends Component {
 
     render() {
 
-        if (this.state.passportLink) {
+        if (this.state.redirectToPassport) {
             return <Redirect to={this.state.passportLink} />
+        }
+        if (this.state.redirectHome) {
+            return <Redirect to="/loggedin" />
         }
 
         return (
@@ -452,6 +471,12 @@ export default class AddPassport extends Component {
                         <input type="submit" value="Add Passport" disabled={this.state.lockAllFields} className="btn btn-primary" />
                     </div>
                 </form>
+                <div className="passport-next-action-section"
+                    hidden={this.state.hideNextSectionButtons}
+                >
+                    <input type="button" onClick={this.redirectToPassport} value="Open Passport" className="btn btn-primary" />
+                    <input type="button" onClick={this.redirectHome} value="Home" className="btn btn-primary" />
+                </div>
             </div>
         )
     }
