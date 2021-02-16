@@ -24,6 +24,9 @@ export default class List extends Component {
                 hideLoading: true
             })
         })
+            .catch(() => {
+                return window.location.reload();
+            })
     }
 
     render() {
