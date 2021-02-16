@@ -137,6 +137,11 @@ export default class searchPassport extends Component {
                             })
                         }, 1000);
 
+                    } else {
+                        this.setState({
+                            hideAddPassportSection: false,
+                            hideCancelButton: false
+                        })
                     }
                 })
                 .catch(() => {
