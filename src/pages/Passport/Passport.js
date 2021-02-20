@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css"
 
 import './passport.css'
 
-// import Visa from './Visas'
+import PassportSVG from '../../images/passport.svg'
 
 class Passport extends React.Component {
 
@@ -32,7 +32,9 @@ class Passport extends React.Component {
             forwardToHome: false,
             redirectToVisaAdd: false,
             passportId: '',
-            visas: []
+            visas: [],
+            hidePage: true,
+            loadingPage: false
         }
     }
 
@@ -45,6 +47,10 @@ class Passport extends React.Component {
                 }
             })
                 .then(response => {
+                    this.setState({
+                        hidePage: false,
+                        loadingPage: true
+                    })
                     if (response.data) {
                         const {
                             _id,
@@ -133,7 +139,7 @@ class Passport extends React.Component {
                         forwardToHome: true
                     })
                 })
-        }, 2000);
+        }, 1000);
     }
 
     componentWillUnmount() {
@@ -187,105 +193,123 @@ class Passport extends React.Component {
         }
 
         return (
-            <div className="passport-page">
-                <div className="page-heading-container">
-                    <h3>
-                        {this.state.firstName} {this.state.lastName}
-                    </h3>
-                    <span>{new Date().getFullYear() - new Date(this.state.dateOfBirth).getFullYear()} Years Old</span>
-                </div>
-                <div className="passport-details">
-                    <div className="detail">
-                        <label className="passport-label">Passport Number</label>
-                        <p>{this.state.passportNumber}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">First Name</label>
-                        <p>{this.state.firstName}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">Second Name</label>
-                        <p>{this.state.secondName}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">Last Name</label>
-                        <p>{this.state.lastName}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">Date of Birth</label>
-                        <p>{new Date(this.state.dateOfBirth).getDate()}/{new Date(this.state.dateOfBirth).getMonth()}/{new Date(this.state.dateOfBirth).getFullYear()}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">Date of Expiry</label>
-                        <p>{new Date(this.state.dateOfExpiry).getDate()}/{new Date(this.state.dateOfExpiry).getMonth()}/{new Date(this.state.dateOfExpiry).getFullYear()}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">Smart Service</label>
-                        <p
-                            style={{ cursor: 'pointer' }}
-                            onClick={this.onClickUnregistered}
-                        >{this.state.smartServices}</p>
-                    </div>
-                    <div className="detail">
-                        <label className="passport-label">Mobile Number</label>
-                        {
-                            this.state.mobileNumbers.map(number => {
-                                return <span
-                                    key={number}
-                                    onClick={() => {
-                                        window.location = "tel:+" + number
-                                    }}
-                                >
-                                    {number}
-                                </span>
-                            })
-                        }
+            <div>
+                <div
+                    hidden={this.state.loadingPage}
+                    className="page-loading">
+                    <div className="page-heading-container">
+                        <img src={PassportSVG} alt="loading" width="100vw" />
+                        <br />
+                        <br />
+                        <br />
+                        <h4>
+                            Loading Passport
+                        </h4>
                     </div>
                 </div>
-                <div>
+                <div
+                    hidden={this.state.hidePage}
+                    // hidden
+                    className="passport-page">
                     <div className="page-heading-container">
                         <h3>
-                            Visa
+                            {this.state.firstName} {this.state.lastName}
                         </h3>
+                        <span>{new Date().getFullYear() - new Date(this.state.dateOfBirth).getFullYear()} Years Old</span>
+                    </div>
+                    <div className="passport-details">
+                        <div className="detail">
+                            <label className="passport-label">Passport Number</label>
+                            <p>{this.state.passportNumber}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">First Name</label>
+                            <p>{this.state.firstName}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">Second Name</label>
+                            <p>{this.state.secondName}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">Last Name</label>
+                            <p>{this.state.lastName}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">Date of Birth</label>
+                            <p>{new Date(this.state.dateOfBirth).getDate()}/{new Date(this.state.dateOfBirth).getMonth()}/{new Date(this.state.dateOfBirth).getFullYear()}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">Date of Expiry</label>
+                            <p>{new Date(this.state.dateOfExpiry).getDate()}/{new Date(this.state.dateOfExpiry).getMonth()}/{new Date(this.state.dateOfExpiry).getFullYear()}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">Smart Service</label>
+                            <p
+                                style={{ cursor: 'pointer' }}
+                                onClick={this.onClickUnregistered}
+                            >{this.state.smartServices}</p>
+                        </div>
+                        <div className="detail">
+                            <label className="passport-label">Mobile Number</label>
+                            {
+                                this.state.mobileNumbers.map(number => {
+                                    return <span
+                                        key={number}
+                                        onClick={() => {
+                                            window.location = "tel:+" + number
+                                        }}
+                                    >
+                                        {number}
+                                    </span>
+                                })
+                            }
+                        </div>
                     </div>
                     <div>
-                        <table className="table">
-                            <thead className="thead-light">
-                                <tr>
-                                    <th>Country</th>
-                                    <th>Duration</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.visas.map(visa => {
-                                        return (
-                                            <tr
-                                                key={visa._id}
-                                            >
-                                                <td>
-                                                    <Link to={`/visa/${visa._id}`}>
-                                                        {visa.visaCountry}
-                                                    </Link>
-                                                </td>
-                                                <td>{visa.visaDuration} Days</td>
-                                                <td>{visa.visaStatus}</td>
+                        <div className="page-heading-container">
+                            <h3>
+                                Visa
+                        </h3>
+                        </div>
+                        <div>
+                            <table className="table">
+                                <thead className="thead-light">
+                                    <tr>
+                                        <th>Country</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.visas.map(visa => {
+                                            return (
+                                                <tr
+                                                    key={visa._id}
+                                                >
+                                                    <td>
+                                                        <Link to={`/visa/${visa._id}`}>
+                                                            {visa.visaCountry}
+                                                        </Link>
+                                                    </td>
+                                                    <td>{visa.visaDuration} Days</td>
+                                                    <td>{visa.visaStatus}</td>
 
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="visa-add-button">
-                        <input
-                            type="button"
-                            value="Add Visa"
-                            className="btn btn-primary"
-                            onClick={this.onClickAddVisa}
-                        />
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="visa-add-button">
+                            <input
+                                type="button"
+                                value="Add Visa"
+                                className="btn btn-primary"
+                                onClick={this.onClickAddVisa}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

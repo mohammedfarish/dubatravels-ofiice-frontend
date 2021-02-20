@@ -60,7 +60,7 @@ export default class searchPassport extends Component {
 
     onChangePassportNumber(e) {
         this.setState({
-            passportNumber: e.target.value
+            passportNumber: e.target.value.toUpperCase()
         })
     }
 
@@ -177,10 +177,10 @@ export default class searchPassport extends Component {
                                     autoFocus
                                     required
                                     readOnly={this.state.passportNumberFieldReadOnly}
-                                    className="form-control"
+                                    className="form-control search-box"
                                     value={this.state.passportNumber}
                                     onChange={this.onChangePassportNumber}
-                                    placeholder="J865876"
+                                    placeholder="Search..."
                                 />
                             </div>
                             <div className="form-group">
