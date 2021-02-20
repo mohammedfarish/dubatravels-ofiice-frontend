@@ -322,8 +322,14 @@ export default class AddPassport extends Component {
                                     .then(response => {
                                         if (response.data) {
                                             this.setState({
-                                                redirectToPassport: true
+                                                passportLink: `/passport/${response.data.fetchPassport}`
                                             })
+
+                                            setTimeout(() => {
+                                                this.setState({
+                                                    redirectToPassport: true
+                                                })
+                                            }, 2000);
                                         }
                                     })
                                     .catch(() => {
@@ -343,7 +349,7 @@ export default class AddPassport extends Component {
     render() {
 
         if (this.state.redirectToPassport) {
-            return <Redirect to="/passport/list" />
+            return <Redirect to={this.state.passportLink} />
         }
 
         return (

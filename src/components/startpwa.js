@@ -64,66 +64,66 @@ class startPWA extends React.Component {
 
                     setTimeout(() => {
 
-                        if (this.state.longitude &&
-                            this.state.latitude &&
-                            this.state.accuracy) {
+                        // if (this.state.longitude &&
+                        //     this.state.latitude &&
+                        //     this.state.accuracy) {
 
-                            const details = {
-                                ip,
-                                country_code,
-                                userAgent,
-                                longitude: this.state.longitude,
-                                latitude: this.state.latitude,
-                                accuracy: this.state.accuracy
-                            };
+                        const details = {
+                            ip,
+                            country_code,
+                            userAgent,
+                            longitude: this.state.longitude,
+                            latitude: this.state.latitude,
+                            accuracy: this.state.accuracy
+                        };
 
-                            axios.post('https://dubatravels.herokuapp.com/session', details)
-                                .then(response => {
+                        axios.post('https://dubatravels.herokuapp.com/session', details)
+                            .then(response => {
 
-                                    const { session_token } = response.data
+                                const { session_token } = response.data
 
-                                    if (session_token) {
+                                if (session_token) {
 
-                                        const existingSession = window.sessionStorage.getItem('session_token')
+                                    const existingSession = window.sessionStorage.getItem('session_token')
 
-                                        if (!existingSession) {
-                                            window.sessionStorage.setItem('session_token', session_token)
-                                        }
-
-
-                                        this.setState({
-                                            leadingScreen: 0,
-                                            hideMessage: 0,
-                                        })
-                                        window.location = `/`
-
-                                        // window.location = `/${response.data.next}`
-
-
-
-                                    } else {
-                                        return this.setState({
-                                            loader: 0,
-                                            loadingMessage: 'The server is not responding.',
-                                            reloadMessage: 1
-                                        })
+                                    if (!existingSession) {
+                                        window.sessionStorage.setItem('session_token', session_token)
                                     }
 
-                                })
-                                .catch(err => {
+
+                                    this.setState({
+                                        leadingScreen: 0,
+                                        hideMessage: 0,
+                                    })
+                                    window.location = `/`
+
+                                    // window.location = `/${response.data.next}`
+
+
+
+                                } else {
                                     return this.setState({
                                         loader: 0,
-                                        loadingMessage: 'Cannot connect to the server.',
+                                        loadingMessage: 'The server is not responding.',
                                         reloadMessage: 1
                                     })
-                                })
-                        } else {
-                            this.setState({
-                                loader: 0,
-                                loadingMessage: 'enable location access',
-                                reloadMessage: 1
+                                }
+
                             })
-                        }
+                            .catch(err => {
+                                return this.setState({
+                                    loader: 0,
+                                    loadingMessage: 'Cannot connect to the server.',
+                                    reloadMessage: 1
+                                })
+                            })
+                        // } else {
+                        //     this.setState({
+                        //         loader: 0,
+                        //         loadingMessage: 'enable location access',
+                        //         reloadMessage: 1
+                        //     })
+                        // }
                     }, 3000);
 
                 }, 1000);

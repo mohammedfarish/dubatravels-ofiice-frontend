@@ -32,7 +32,7 @@ class VisaEntry extends React.Component {
                 "Declined"
             ],
             selectedStatus: "Processing",
-            disableSubmiit: true,
+            disableSubmiit: false,
             hideUID: true,
             UID: '',
             redirectToPassport: false,
@@ -335,7 +335,7 @@ class VisaEntry extends React.Component {
                                 />
                             </div>
                         </div>
-                        <input type="submit" value="Add Visa" className="btn btn-primary" />
+                        <input type="submit" disabled={this.state.disableSubmiit} value="Add Visa" className="btn btn-primary" />
                     </div>
                 </form>
                 <div

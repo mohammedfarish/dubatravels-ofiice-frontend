@@ -63,3 +63,13 @@
   display: flex;
   justify-content: center;
 }
+
+.search-box {
+  /* background-color: white; */
+  background-image: url("/src//images/search.svg");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  background-position-y: center;
+  padding-left: 40px;
+  /* height: 8vh; */
+}
