@@ -17,7 +17,6 @@ class LoggedIn extends React.Component {
     }
 
     componentDidMount() {
-        console.log(process.env)
         const capitalize = ([first, ...rest], lowerRest = false) =>
             first.toUpperCase() +
             (lowerRest ? rest.join('').toLowerCase() : rest.join(''));
