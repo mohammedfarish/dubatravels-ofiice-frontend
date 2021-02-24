@@ -35,4 +35,31 @@
   align-items: center;
   /* background: lightblue; */
   /* width: 80%; */
+  font-size: small;
+  text-align: center;
+}
+
+.update-option {
+  background: #1c1c1c;
+  color: whitesmoke;
+  transition-duration: 0.4s;
+}
+.update-option:hover {
+  background: white;
+  color: #1c1c1c;
+}
+
+.update-app-section {
+  padding-top: 2%;
+  border: solid black 2px;
+  /* color: white; */
+  /* background: grey; */
+  margin-bottom: 5%;
+}
+
+.update-note {
+  padding-left: 5%;
+  padding-right: 5%;
+  text-align: center;
+  font-size: smaller;
 }
