@@ -36,6 +36,7 @@ class LoggedIn extends React.Component {
             } else {
                 window.localStorage.setItem('app_version', currentVersion);
             }
+            console.log(updateMessage)
         } else {
             let updateMessage = process.env.REACT_APP_VERCEL_GIT_COMMIT_MESSAGE
             if (updateMessage) {
@@ -47,6 +48,8 @@ class LoggedIn extends React.Component {
                 hideUpdate: false,
                 updateMessage: capitalize(updateMessage)
             })
+
+            console.log(updateMessage)
         }
 
         this.checkLoggedin = setInterval(() => {
@@ -127,18 +130,18 @@ class LoggedIn extends React.Component {
                                 hidden={this.state.hideUpdate}
                             >
                                 <label className="loggenin-section-label">Update Available</label>
-                                <div
-                                    onClick={() => {
-                                        const currentVersion = process.env.VERSION
-                                        if (currentVersion) {
-                                            window.localStorage.setItem('app_version', currentVersion)
-                                        }
-                                        window.location.reload()
-                                    }}>
+                                <div>
                                     <div className="loggedin-update-message">
                                         <p>Update note: {this.state.updateMessage}</p>
                                     </div>
-                                    <div className="loggedin-option-container">
+                                    <div className="loggedin-option-container"
+                                        onClick={() => {
+                                            const currentVersion = process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA
+                                            if (currentVersion) {
+                                                window.localStorage.setItem('app_version', currentVersion)
+                                            }
+                                            window.location.reload()
+                                        }}>
                                         <h2 className="loggedin-option">
                                             Update
                                         </h2>
