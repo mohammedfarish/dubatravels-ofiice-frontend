@@ -36,7 +36,6 @@ class LoggedIn extends React.Component {
             } else {
                 window.localStorage.setItem('app_version', currentVersion);
             }
-            console.log(updateMessage)
         } else {
             let updateMessage = process.env.REACT_APP_VERCEL_GIT_COMMIT_MESSAGE
             if (updateMessage) {
@@ -48,8 +47,6 @@ class LoggedIn extends React.Component {
                 hideUpdate: false,
                 updateMessage: capitalize(updateMessage)
             })
-
-            console.log(updateMessage)
         }
 
         this.checkLoggedin = setInterval(() => {
@@ -128,11 +125,14 @@ class LoggedIn extends React.Component {
 
                             <div
                                 hidden={this.state.hideUpdate}
+                                className="update-app-section"
                             >
                                 <label className="loggenin-section-label">Update Available</label>
                                 <div>
                                     <div className="loggedin-update-message">
-                                        <p>Update note: {this.state.updateMessage}</p>
+                                        <p>
+                                            {this.state.updateMessage}
+                                        </p>
                                     </div>
                                     <div className="loggedin-option-container"
                                         onClick={() => {
@@ -142,10 +142,13 @@ class LoggedIn extends React.Component {
                                             }
                                             window.location.reload()
                                         }}>
-                                        <h2 className="loggedin-option">
+                                        <h2 className="loggedin-option update-option">
                                             Update
                                         </h2>
                                     </div>
+                                    <p className="update-note">
+                                        Please note that most of the updates are bug based, so don't eexpect any visual changes.
+                                    </p>
                                 </div>
                             </div>
 
