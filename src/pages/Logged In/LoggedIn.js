@@ -18,35 +18,35 @@ class LoggedIn extends React.Component {
 
     componentDidMount() {
         console.log(process.env)
-        // const capitalize = ([first, ...rest], lowerRest = false) =>
-        //     first.toUpperCase() +
-        //     (lowerRest ? rest.join('').toLowerCase() : rest.join(''));
+        const capitalize = ([first, ...rest], lowerRest = false) =>
+            first.toUpperCase() +
+            (lowerRest ? rest.join('').toLowerCase() : rest.join(''));
 
-        const currentVersion = process.env.VERSION
+        const currentVersion = process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA
         if (currentVersion) {
-            // let updateMessage = process.env.VERSION_UPDATE_MESSAGE
-            // updateMessage = updateMessage.split('\n').slice(1).join(' ')
+            let updateMessage = process.env.REACT_APP_VERCEL_GIT_COMMIT_MESSAGE
+            updateMessage = updateMessage.split('\n').slice(1).join(' ')
             const cachedVersion = window.localStorage.getItem('app_version')
             if (cachedVersion) {
                 if (currentVersion !== cachedVersion) {
                     this.setState({
                         hideUpdate: false,
-                        // updateMessage: capitalize(updateMessage)
+                        updateMessage: capitalize(updateMessage)
                     })
                 }
             } else {
                 window.localStorage.setItem('app_version', currentVersion);
             }
         } else {
-            let updateMessage = process.env.VERSION_UPDATE_MESSAGE
+            let updateMessage = process.env.REACT_APP_VERCEL_GIT_COMMIT_MESSAGE
             if (updateMessage) {
-                // updateMessage = updateMessage.split('\n').slice(1).join(' ')
+                updateMessage = updateMessage.split('\n').slice(1).join(' ')
             } else {
-                // updateMessage = this.state.updateMessage
+                updateMessage = this.state.updateMessage
             }
             this.setState({
                 hideUpdate: false,
-                // updateMessage: capitalize(updateMessage)
+                updateMessage: capitalize(updateMessage)
             })
         }
 
