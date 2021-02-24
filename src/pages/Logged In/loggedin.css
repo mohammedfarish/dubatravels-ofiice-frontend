@@ -1,6 +1,38 @@
+.loggedin-option-container {
+  background: whitesmoke;
+  border: 2px black;
+  text-decoration: none;
+  text-align: center;
+  justify-content: space-evenly;
+  align-items: center;
+  color: #1c1c1c;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.loggedin-option {
+  font-size: 3vh;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  text-decoration: none;
+}
+.loggedin-option-container:hover {
+  text-decoration: none;
+  background: #1c1c1c;
+  color: whitesmoke;
+}
 .loggenin-section-label {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.loggedin-update-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background: lightblue; */
+  /* width: 80%; */
 }
