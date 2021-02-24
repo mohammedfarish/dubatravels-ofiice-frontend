@@ -41,8 +41,8 @@ class App extends React.Component {
 
 
   componentDidMount() {
-    if (process.env.VERCEL_GIT_COMMIT_SHA) {
-      console.log(process.env.VERCEL_GIT_COMMIT_SHA)
+    if (process.env) {
+      console.log(process.env)
     }
     if (window.matchMedia('(display-mode: standalone)').matches) {
 
