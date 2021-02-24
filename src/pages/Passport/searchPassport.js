@@ -45,12 +45,14 @@ export default class searchPassport extends Component {
                             loggedin: true
                         })
                     } else {
+                        window.location = "/"
                         this.setState({
                             loggedin: false
                         })
                     }
                 })
                 .catch(() => {
+                    window.location = "/"
                     this.setState({
                         loggedin: false
                     })

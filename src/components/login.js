@@ -19,7 +19,8 @@ class Login extends React.Component {
             disableRegisterButton: true,
             userIP: '',
             userCountryCode: '',
-            loggedIn: false,
+            loggedIn: null,
+            loaded: false
         }
     }
 
@@ -36,11 +37,13 @@ class Login extends React.Component {
                     if (response.data) {
                         return this.setState({
                             loggedIn: true,
+                            loaded: true
                         });
                     } else {
                         window.localStorage.setItem("token", "")
                         this.setState({
                             loggedIn: false,
+                            loaded: true
                         })
                     }
                 })
@@ -48,8 +51,15 @@ class Login extends React.Component {
                     window.localStorage.setItem("token", "")
                     this.setState({
                         loggedIn: false,
+                        loaded: true
                     })
                 })
+        } else {
+            window.localStorage.setItem("token", "")
+            this.setState({
+                loggedIn: false,
+                loaded: true
+            })
         }
 
         if (!this.state.loggedIn) {
@@ -180,9 +190,9 @@ class Login extends React.Component {
     }
 
     render() {
-        if (this.state.loggedIn) {
+        if (this.state.loggedIn === true) {
             return <Redirect to="/loggedin" />
-        } else {
+        } else if (this.state.loggedIn === false) {
             return (
                 <div>
                     <div className="page-heading-container">
@@ -222,6 +232,10 @@ class Login extends React.Component {
                     </form>
                 </div >
             )
+        } else if (this.state.loggedIn === null) {
+            return <div>
+                loading
+            </div>
         }
     }
 }
