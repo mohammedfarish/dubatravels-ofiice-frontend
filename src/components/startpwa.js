@@ -95,11 +95,8 @@ class startPWA extends React.Component {
                                         leadingScreen: 0,
                                         hideMessage: 0,
                                     })
+
                                     window.location = `/`
-
-                                    // window.location = `/${response.data.next}`
-
-
 
                                 } else {
                                     return this.setState({

@@ -41,7 +41,9 @@ class App extends React.Component {
 
 
   componentDidMount() {
-
+    if (process.env.VERCEL_GIT_COMMIT_SHA) {
+      console.log(process.env.VERCEL_GIT_COMMIT_SHA)
+    }
     if (window.matchMedia('(display-mode: standalone)').matches) {
 
       const sessionToken = window.sessionStorage.getItem("session_token");
@@ -50,50 +52,65 @@ class App extends React.Component {
         session_token = sessionToken
       } else {
         session_token = undefined
-        if (window.location.pathname !== '/startpwa') {
+        if (window.location.pathname === '/startpwa' ||
+          window.location.pathname === '/checklogin') {
+
+        } else {
           window.location = "/startpwa"
+
         }
       }
+
 
       let token = window.localStorage.getItem('token');
-      if (!token) {
-        window.localStorage.setItem('token', '')
-        token = ""
-      }
-
-      axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
-        headers: {
-          "x-auth-token": token
-        }
-      })
-        .then(response => {
-          if (response.data) {
-            axios.get('https://dubatravels.herokuapp.com/user', {
-              headers: {
-                "x-auth-token": token,
-                "session_token": session_token
-              }
-            })
-              .then(response => {
-                setTimeout(() => {
-
-                  if (response.data) {
-                    this.setState({
-                      user: response.data,
-                      token: token,
-                      homepage: '/loggedin'
-                    })
-                  } else {
-                    this.setState({
-                      user: '',
-                      token: '',
-                      homepage: '/login'
-                    })
-                  }
-                }, 2000);
-              })
+      if (token) {
+        // console.log('test')
+        // window.localStorage.setItem('token', '')
+        // token = ""
+        axios.post('https://dubatravels.herokuapp.com/user/verify', null, {
+          headers: {
+            "x-auth-token": token
           }
         })
+          .then(response => {
+            // console.log(response.data)
+            if (response.data) {
+              axios.get('https://dubatravels.herokuapp.com/user', {
+                headers: {
+                  "x-auth-token": token,
+                  "session_token": session_token
+                }
+              })
+                .then(response => {
+                  setTimeout(() => {
+
+                    if (response.data) {
+                      this.setState({
+                        user: response.data,
+                        token: token,
+                        homepage: '/loggedin'
+                      })
+                    } else {
+                      this.setState({
+                        user: '',
+                        token: '',
+                        homepage: '/login'
+                      })
+                    }
+                  }, 2000);
+                })
+            } else {
+              if (window.location.pathname === "/startpwa" ||
+                window.location.pathname === "/login") {
+                return;
+              } else {
+                window.localStorage.setItem('token', '');
+                window.location = "/login"
+              }
+            }
+          })
+      }
+
 
       const header = document.getElementById("header");
       if (header) {
