@@ -41,9 +41,7 @@ class App extends React.Component {
 
 
   componentDidMount() {
-    if (process.env) {
-      console.log(process.env)
-    }
+
     if (window.matchMedia('(display-mode: standalone)').matches) {
 
       const sessionToken = window.sessionStorage.getItem("session_token");

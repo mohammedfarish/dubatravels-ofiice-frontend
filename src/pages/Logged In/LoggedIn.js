@@ -10,11 +10,40 @@ class LoggedIn extends React.Component {
 
         this.state = {
             displayName: '',
-            username: ''
+            username: '',
+            hideUpdate: true,
+            updateMessage: 'update local app'
         }
     }
 
     componentDidMount() {
+        const capitalize = ([first, ...rest], lowerRest = false) =>
+            first.toUpperCase() +
+            (lowerRest ? rest.join('').toLowerCase() : rest.join(''));
+
+        const currentVersion = process.env.VERSION
+        if (currentVersion) {
+            let updateMessage = process.env.VERSION_UPDATE_MESSAGE
+            updateMessage = updateMessage.split('\n').slice(1).join(' ')
+            const cachedVersion = window.localStorage.getItem('app_version')
+            if (cachedVersion) {
+                if (currentVersion !== cachedVersion) {
+                    this.setState({
+                        hideUpdate: false,
+                        updateMessage: capitalize(updateMessage)
+                    })
+                }
+            } else {
+                window.localStorage.setItem('app_version', currentVersion);
+            }
+        } else {
+            let updateMessage = process.env.VERSION_UPDATE_MESSAGE
+            updateMessage = updateMessage.split('\n').slice(1).join(' ')
+            this.setState({
+                hideUpdate: false,
+                updateMessage: capitalize(updateMessage)
+            })
+        }
 
         this.checkLoggedin = setInterval(() => {
             if (!window.localStorage.getItem("token") ||
@@ -90,10 +119,21 @@ class LoggedIn extends React.Component {
 
                             <br />
 
-                            <div >
-                                <label className="loggenin-section-label">Development</label>
+                            <div
+                                hidden={this.state.hideUpdate}
+                            >
+                                <label className="loggenin-section-label">Update Available</label>
                                 <div
-                                    onClick={() => window.location.reload()}>
+                                    onClick={() => {
+                                        const currentVersion = process.env.VERSION
+                                        if (currentVersion) {
+                                            window.localStorage.setItem('app_version', currentVersion)
+                                        }
+                                        window.location.reload()
+                                    }}>
+                                    <div className="loggedin-update-message">
+                                        <p>Update note: {this.state.updateMessage}</p>
+                                    </div>
                                     <div className="loggedin-option-container">
                                         <h2 className="loggedin-option">
                                             Update
