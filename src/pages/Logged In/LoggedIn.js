@@ -17,20 +17,21 @@ class LoggedIn extends React.Component {
     }
 
     componentDidMount() {
-        const capitalize = ([first, ...rest], lowerRest = false) =>
-            first.toUpperCase() +
-            (lowerRest ? rest.join('').toLowerCase() : rest.join(''));
+        console.log(process.env)
+        // const capitalize = ([first, ...rest], lowerRest = false) =>
+        //     first.toUpperCase() +
+        //     (lowerRest ? rest.join('').toLowerCase() : rest.join(''));
 
         const currentVersion = process.env.VERSION
         if (currentVersion) {
-            let updateMessage = process.env.VERSION_UPDATE_MESSAGE
-            updateMessage = updateMessage.split('\n').slice(1).join(' ')
+            // let updateMessage = process.env.VERSION_UPDATE_MESSAGE
+            // updateMessage = updateMessage.split('\n').slice(1).join(' ')
             const cachedVersion = window.localStorage.getItem('app_version')
             if (cachedVersion) {
                 if (currentVersion !== cachedVersion) {
                     this.setState({
                         hideUpdate: false,
-                        updateMessage: capitalize(updateMessage)
+                        // updateMessage: capitalize(updateMessage)
                     })
                 }
             } else {
@@ -38,10 +39,14 @@ class LoggedIn extends React.Component {
             }
         } else {
             let updateMessage = process.env.VERSION_UPDATE_MESSAGE
-            updateMessage = updateMessage.split('\n').slice(1).join(' ')
+            if (updateMessage) {
+                // updateMessage = updateMessage.split('\n').slice(1).join(' ')
+            } else {
+                // updateMessage = this.state.updateMessage
+            }
             this.setState({
                 hideUpdate: false,
-                updateMessage: capitalize(updateMessage)
+                // updateMessage: capitalize(updateMessage)
             })
         }
 
