@@ -57,7 +57,7 @@ export default class Visa extends Component {
                         })
                     })
                 })
-        }, 2000);
+        }, 500);
     }
 
     onClickUpdate() {

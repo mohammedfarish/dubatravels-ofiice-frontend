@@ -318,7 +318,11 @@ export default class AddPassport extends Component {
                                     entryBy: response.data._id
                                 }
 
-                                axios.post("https://dubatravels.herokuapp.com/passport/add", passport)
+                                axios.post("https://dubatravels.herokuapp.com/passport/add", passport, {
+                                    headers: {
+                                        'x-auth-token': window.localStorage.getItem('token')
+                                    }
+                                })
                                     .then(response => {
                                         if (response.data) {
                                             this.setState({
