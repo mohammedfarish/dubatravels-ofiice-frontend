@@ -236,11 +236,11 @@ class Passport extends React.Component {
                         </div>
                         <div className="detail">
                             <label className="passport-label">Date of Birth</label>
-                            <p>{new Date(this.state.dateOfBirth).getDate()}/{new Date(this.state.dateOfBirth).getMonth()}/{new Date(this.state.dateOfBirth).getFullYear()}</p>
+                            <p>{new Date(this.state.dateOfBirth).getDate()}/{new Date(this.state.dateOfBirth).getMonth() + 1}/{new Date(this.state.dateOfBirth).getFullYear()}</p>
                         </div>
                         <div className="detail">
                             <label className="passport-label">Date of Expiry</label>
-                            <p>{new Date(this.state.dateOfExpiry).getDate()}/{new Date(this.state.dateOfExpiry).getMonth()}/{new Date(this.state.dateOfExpiry).getFullYear()}</p>
+                            <p>{new Date(this.state.dateOfExpiry).getDate()}/{new Date(this.state.dateOfExpiry).getMonth() + 1}/{new Date(this.state.dateOfExpiry).getFullYear()}</p>
                         </div>
                         <div className="detail">
                             <label className="passport-label">Smart Service</label>
