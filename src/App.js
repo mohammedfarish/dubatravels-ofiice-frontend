@@ -1,27 +1,29 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import "bootstrap/dist/css/bootstrap.min.css"
-import "./App.css"
 
-import Navbar from "./components/Navbar"
-import searchPAssport from './pages/Passport/searchPassport'
-import Passport from './pages/Passport/Passport'
-import VisaEntry from './components/visaRegistration'
-import Register from './components/register'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+
+import userContext from "./context/userContext";
+
+import Navbar from "./components/Navbar";
+import searchPAssport from './pages/Passport/searchPassport';
+import Passport from './pages/Passport/Passport';
+import VisaEntry from './components/visaRegistration';
+import Register from './components/register';
 import Login from "./components/login";
 import Logout from "./components/Logout";
-import LoggedIn from './pages/Logged In/LoggedIn'
+import LoggedIn from './pages/Logged In/LoggedIn';
 
-import Home from './components/Homepage'
-import Install from './components/install/Install'
-import startPWA from './components/startpwa';
+import Home from './components/Homepage';
+import Install from './components/install/Install';
+import StartPWA from './components/startpwa';
 
 import AddPassport from './pages/Passport/AddPassport';
 import AddVisa from './pages/Add/Visa';
-import VisaUpdate from './pages/Visa/Update'
+import VisaUpdate from './pages/Visa/Update';
 
-import userContext from "./context/userContext";
 import PendingVisa from './pages/Visa/PendingVisa';
 import List from './pages/Passport/List';
 import Visa from './pages/Visa/Visa';
@@ -71,7 +73,6 @@ class App extends React.Component {
           }
         })
           .then(response => {
-            // console.log(response.data)
             if (response.data) {
               axios.get('https://dubatravels.herokuapp.com/user', {
                 headers: {
@@ -142,18 +143,18 @@ class App extends React.Component {
                   <div className="container">
                     <Switch>
                       <Route path='/' exact component={LoggedIn} />
-                      <Route path='/search' component={searchPAssport} />
+                      <Route path='/search' exact component={searchPAssport} />
                       <Route path='/visa/add/:id' component={VisaEntry} />
                       <Route path='/visa/update/:id' component={VisaUpdate} />
-                      <Route path='/visa/pending' component={PendingVisa} />
+                      <Route path='/visa/pending' exact component={PendingVisa} />
                       <Route path='/passport/list' exact component={List} />
-                      <Route path='/passport/add/:id' exact component={AddPassport} />
-                      <Route path='/passport/:id' exact component={Passport} />
-                      <Route path='/visa/:id' exact component={Visa} />
+                      <Route path='/passport/add/:id' component={AddPassport} />
+                      <Route path='/passport/:id' component={Passport} />
+                      <Route path='/visa/:id' component={Visa} />
                       <Route path='/add/visa' exact component={AddVisa} />
-                      <Route path='/logout' component={Logout} />
-                      <Route path='/loggedin' component={LoggedIn} />
-                      <Route path='/startpwa' component={startPWA} />
+                      <Route path='/logout' exact component={Logout} />
+                      <Route path='/loggedin' exact component={LoggedIn} />
+                      <Route path='/startpwa' exact component={StartPWA} />
                     </Switch>
                   </div>
                 </div>
@@ -161,7 +162,9 @@ class App extends React.Component {
             </Router>
           </userContext.Provider>
         );
+
       } else {
+
         return (
           <userContext.Provider value={this.state}>
             <Router>
@@ -171,9 +174,9 @@ class App extends React.Component {
                   <div className="container">
                     <Switch>
                       <Route path='/' exact component={Login} />
-                      <Route path='/register' component={Register} />
-                      <Route path='/login' component={Login} />
-                      <Route path='/startpwa' component={startPWA} />
+                      <Route path='/register' exact component={Register} />
+                      <Route path='/login' exact component={Login} />
+                      <Route path='/startpwa' exact component={StartPWA} />
                     </Switch>
                   </div>
                 </div>
@@ -184,17 +187,19 @@ class App extends React.Component {
       }
 
     } else {
+
       return (
         <Router>
           <div className="container">
             <Switch>
-              <Route path='/' exact render={() => <Home />} />
-              <Route path='/install/' render={() => <Install />} />
+              <Route path='/' exact component={Home} />
+              <Route path='/install/' exact component={Install} />
               <Route exact render={() => <Redirect to="/" />} />
             </Switch>
           </div>
         </Router>
       )
+
     }
   }
 }

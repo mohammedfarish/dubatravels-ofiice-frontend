@@ -61,8 +61,10 @@ export default class searchPassport extends Component {
     }
 
     onChangePassportNumber(e) {
+        const removeWhitespace = str => str.replace(/\s+/g, '');
+
         this.setState({
-            passportNumber: e.target.value.toUpperCase()
+            passportNumber: removeWhitespace(e.target.value.toUpperCase())
         })
     }
 

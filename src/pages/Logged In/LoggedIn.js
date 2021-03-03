@@ -77,6 +77,35 @@ class LoggedIn extends React.Component {
                                 </p>
                             </div>
                         </div>
+                        <div
+                            hidden={this.state.hideUpdate}
+                            className="update-app-section"
+                        >
+                            <label className="loggenin-section-label">Update Available</label>
+                            <div>
+                                <div className="loggedin-update-message">
+                                    <p>
+                                        {this.state.updateMessage}
+                                    </p>
+                                </div>
+                                <div className="loggedin-option-container"
+                                    onClick={() => {
+                                        const currentVersion = process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA
+                                        if (currentVersion) {
+                                            window.localStorage.setItem('app_version', currentVersion)
+                                        }
+                                        window.location.reload()
+                                    }}>
+                                    <h2 className="loggedin-option update-option">
+                                        Update
+                                        </h2>
+                                </div>
+                                <p className="update-note">
+                                    Please note that most of the updates are bug based, so don't eexpect any visual changes.
+                                    </p>
+                            </div>
+                        </div>
+                        <br hidden={this.state.hideUpdate} />
                         <label className="loggenin-section-label">Customer</label>
                         <div>
                             <Link to="/search" style={{ textDecoration: 'none' }}>
@@ -123,36 +152,6 @@ class LoggedIn extends React.Component {
 
                             <br />
 
-                            <div
-                                hidden={this.state.hideUpdate}
-                                className="update-app-section"
-                            >
-                                <label className="loggenin-section-label">Update Available</label>
-                                <div>
-                                    <div className="loggedin-update-message">
-                                        <p>
-                                            {this.state.updateMessage}
-                                        </p>
-                                    </div>
-                                    <div className="loggedin-option-container"
-                                        onClick={() => {
-                                            const currentVersion = process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA
-                                            if (currentVersion) {
-                                                window.localStorage.setItem('app_version', currentVersion)
-                                            }
-                                            window.location.reload()
-                                        }}>
-                                        <h2 className="loggedin-option update-option">
-                                            Update
-                                        </h2>
-                                    </div>
-                                    <p className="update-note">
-                                        Please note that most of the updates are bug based, so don't eexpect any visual changes.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <br />
                             <div>
                                 <Link
                                     to="/logout"
