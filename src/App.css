@@ -128,6 +128,7 @@
 /* ========================= */
 
 .page-heading-container {
+  user-select: none;
   text-align: center;
   padding-top: 5vh;
   padding-bottom: 5vh;

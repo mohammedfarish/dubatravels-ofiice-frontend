@@ -186,7 +186,6 @@ class Login extends React.Component {
                     })
                 }
             })
-
     }
 
     render() {
@@ -233,9 +232,7 @@ class Login extends React.Component {
                 </div >
             )
         } else if (this.state.loggedIn === null) {
-            return <div>
-                loading
-            </div>
+            return <div></div>
         }
     }
 }

@@ -51,10 +51,13 @@
 
 .update-app-section {
   padding-top: 2%;
-  border: solid black 2px;
+  /* background: lightgray; */
+  border: dotted black 2px;
   /* color: white; */
   /* background: grey; */
   margin-bottom: 5%;
+  cursor: default;
+  user-select: none;
 }
 
 .update-note {
